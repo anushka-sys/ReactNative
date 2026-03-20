@@ -20,15 +20,19 @@ const UserList = props => {
   const [id, setId] = useState();
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     loadUsers();
+    // setUserList(data);
+    // setFilteredList(data);
   }, []);
 
   const loadUsers = async () => {
-    const data = await GetApi();
-    setUsers(data);
-  };
+  const data = await GetApi();
+  setUsers(data);
+  setFilteredUsers(data); 
+}; 
 
   //Refresh
   const onRefresh = () => {
@@ -50,27 +54,36 @@ const UserList = props => {
       headerRight: () => (
         <View style={styles.icons}>
           <TouchableOpacity onPress={() => setSearchVisible(prev => !prev)}>
-          <SearchIcon size={25} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Filter')}>
-           <Icon name="filter-alt" size={25} color='grey' />
-        </TouchableOpacity>
+            <SearchIcon size={25} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => props.navigation.navigate('Filter')}>
+            <Icon name="filter-alt" size={25} color="grey" />
+          </TouchableOpacity>
         </View>
       ),
     });
   }, [props.navigation]);
 
+const handleSearch = (text) => {
+  setSearchQuery(text);
+
+  const filtered = users.filter((item) =>
+    item.name.toLowerCase().includes(text.toLowerCase())
+  );
+
+  setFilteredUsers(filtered);
+};
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <View style={styles.page}>
-        
         {isSearchVisible && (
           <View style={styles.searchContainer}>
             <TextInput
               placeholder="Search users"
               style={styles.searchInput}
               placeholderTextColor="#888"
-              onChangeText={setSearchQuery}
+              onChangeText={handleSearch}
             />
 
             <TouchableOpacity
@@ -85,7 +98,7 @@ const UserList = props => {
         )}
 
         <FlatList
-          data={users}
+          data={filteredUsers}
           keyExtractor={item => item.id}
           contentContainerStyle={{ paddingBottom: 100 }}
           refreshControl={
@@ -234,9 +247,9 @@ const styles = StyleSheet.create({
     color: 'blue',
     padding: 5,
   },
-  icons:{
-    flexDirection:'row',
-    padding:5,
-    gap:10,
-  }
+  icons: {
+    flexDirection: 'row',
+    padding: 5,
+    gap: 10,
+  },
 });
