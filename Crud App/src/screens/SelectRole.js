@@ -17,7 +17,6 @@ const SelectRole = props => {
 
   return (
     <View style={styles.container}>
-
       {/* Admin */}
       <View style={styles.roleContainer}>
         <TouchableOpacity
@@ -56,7 +55,9 @@ const SelectRole = props => {
         >
           <Text style={styles.text}>Employee</Text>
           <Icon
-            name={selectedRoles.includes('Employee') ? 'check-circle' : 'circle'}
+            name={
+              selectedRoles.includes('Employee') ? 'check-circle' : 'circle'
+            }
             size={20}
             color="white"
           />
@@ -88,13 +89,13 @@ const SelectRole = props => {
           </TouchableOpacity>
 
           <TouchableOpacity
-              onPress={() => {
-  props.navigation.navigate({
-    name: 'Filter',
-    params: { selectedRoles },
-    merge: true,
-  });
-}}
+            onPress={() => {
+              props.navigation.navigate({
+                name: 'Filter',
+                params: { selectedRoles },
+                merge: true,
+              });
+            }}
           >
             <View style={styles.ApplyText}>
               <Text style={styles.Apply}>Confirm</Text>
@@ -102,7 +103,6 @@ const SelectRole = props => {
           </TouchableOpacity>
         </View>
       </View>
-
     </View>
   );
 };

@@ -1,22 +1,22 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-const NoData = () => {
+const NoData = ({ onClear }) => {
   return (
     <View style={styles.container}>
       <View style={styles.page}>
         <View style={styles.Imagecontainer}>
-        <Image
-        source={require('../assets/nodata.jpg')}
-        style={{ width: 250, height: 200 ,padding:10}}
-      />
-      </View>
-      <Text style={styles.text}>No Data found</Text>
-     <View style={styles.buttoncontainer}>
-       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttontext}>Clear parameters</Text>
-      </TouchableOpacity>
-     </View>
+          <Image
+            source={require('../assets/nodata.jpg')}
+            style={{ width: 250, height: 200, padding: 10 }}
+          />
+        </View>
+        <Text style={styles.text}>No Data found</Text>
+        <View style={styles.buttoncontainer}>
+          <TouchableOpacity style={styles.button} onPress={onClear}> 
+            <Text style={styles.buttontext}>Clear parameters</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
 
     },
     buttontext:{
-      padding:5,
+      padding:6,
+      paddingLeft:10,
       color:'white',
     },
     page:{
