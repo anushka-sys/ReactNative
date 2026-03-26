@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Filter = props => {
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(null);
+
+  const roles = props.route?.params?.selectedRoles || [];
 
   return (
     <View style={styles.filterContainer}>
@@ -13,10 +15,12 @@ const Filter = props => {
           style={styles.Selectcontainer}
           onPress={() => props.navigation.navigate('Select Role')}
         >
-          <Text style={styles.text}>Select {'>'}</Text>
+         <Text style={styles.text}>{selectedStatus ? selectedStatus + ' >' : 'Select >'}</Text>
         </TouchableOpacity>
       </View>
+
       <Text style={styles.title}>Status</Text>
+
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.Selectcontainer}
@@ -33,7 +37,14 @@ const Filter = props => {
               <Text style={styles.buttonText}>Clear</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('All Users', {
+                selectedRoles: roles,
+                selectedStatus: selectedStatus,
+              });
+            }}
+          >
             <View style={styles.ApplyText}>
               <Text style={styles.Apply}>Apply</Text>
             </View>
@@ -45,6 +56,7 @@ const Filter = props => {
         visible={statusModalVisible}
         transparent={true}
         animationType="slide"
+        onRequestClose={() => setStatusModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           {/* Bottom Sheet */}
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 5,
     backgroundColor: '#4f7eed',
-    borderColor:'#4f7eed',
+    borderColor: '#4f7eed',
   },
   container: {
     paddingLeft: 20,
@@ -159,7 +171,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   bottomView: {
-    flex: 1,
+    //flex: 1,
     width: '100%',
     height: 70,
     backgroundColor: '#536dfe',
@@ -199,6 +211,11 @@ const styles = StyleSheet.create({
   Apply: {
     fontWeight: 'bold',
     color: 'white',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'flex-end',
   },
 });
 

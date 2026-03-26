@@ -3,72 +3,98 @@ import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
 const SelectRole = props => {
-  const [selectedRoles, setSelectedRoles] = useState({
-    Admin: false,
-    Manager: false,
-    Employee: false,
-    Staff: false,
-  });
+  const [selectedRoles, setSelectedRoles] = useState([]);
 
-  const roles = ['Admin', 'Manager', 'Employee', 'Staff'];
-
-  const toggleRole = role => {
-    setSelectedRoles({
-      ...selectedRoles,
-      [role]: !selectedRoles[role],
-    });
-  };
-
-  const getSelectedRoles = () => {
-    return Object.keys(selectedRoles).filter(key => selectedRoles[key]);
+  const handlePress = role => {
+    if (selectedRoles.includes(role)) {
+      // remove role
+      setSelectedRoles(selectedRoles.filter(item => item !== role));
+    } else {
+      // add role
+      setSelectedRoles([...selectedRoles, role]);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {roles.map((item, index) => (
-        <View key={index} style={styles.roleContainer}>
-          <TouchableOpacity
-            style={styles.Selectcontainer}
-            onPress={() => toggleRole(item)}
-          >
-            <Text style={styles.text}>{item}</Text>
 
-            <Icon
-              name={selectedRoles[item] ? 'check-circle' : 'circle'}
-              size={20}
-              color="white"
-            />
-          </TouchableOpacity>
-        </View>
-      ))}
+      {/* Admin */}
+      <View style={styles.roleContainer}>
+        <TouchableOpacity
+          style={styles.Selectcontainer}
+          onPress={() => handlePress('Admin')}
+        >
+          <Text style={styles.text}>Admin</Text>
+          <Icon
+            name={selectedRoles.includes('Admin') ? 'check-circle' : 'circle'}
+            size={20}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Manager */}
+      <View style={styles.roleContainer}>
+        <TouchableOpacity
+          style={styles.Selectcontainer}
+          onPress={() => handlePress('Manager')}
+        >
+          <Text style={styles.text}>Manager</Text>
+          <Icon
+            name={selectedRoles.includes('Manager') ? 'check-circle' : 'circle'}
+            size={20}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Employee */}
+      <View style={styles.roleContainer}>
+        <TouchableOpacity
+          style={styles.Selectcontainer}
+          onPress={() => handlePress('Employee')}
+        >
+          <Text style={styles.text}>Employee</Text>
+          <Icon
+            name={selectedRoles.includes('Employee') ? 'check-circle' : 'circle'}
+            size={20}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Staff */}
+      <View style={styles.roleContainer}>
+        <TouchableOpacity
+          style={styles.Selectcontainer}
+          onPress={() => handlePress('Staff')}
+        >
+          <Text style={styles.text}>Staff</Text>
+          <Icon
+            name={selectedRoles.includes('Staff') ? 'check-circle' : 'circle'}
+            size={20}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomView}>
         <View style={styles.bottombutton}>
-          <TouchableOpacity
-            onPress={() =>
-              setSelectedRoles({
-                Admin: false,
-                Manager: false,
-                Employee: false,
-                Staff: false,
-              })
-            }
-          >
+          <TouchableOpacity onPress={() => setSelectedRoles([])}>
             <View style={styles.Cleartext}>
               <Text style={styles.buttonText}>Clear filter</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              const data = getSelectedRoles();
-              console.log('Sending Roles:', data);
-
-              props.navigation.navigate('Filter', {
-                selectedRoles: data,
-              });
-            }}
+              onPress={() => {
+  props.navigation.navigate({
+    name: 'Filter',
+    params: { selectedRoles },
+    merge: true,
+  });
+}}
           >
             <View style={styles.ApplyText}>
               <Text style={styles.Apply}>Confirm</Text>
@@ -76,6 +102,7 @@ const SelectRole = props => {
           </TouchableOpacity>
         </View>
       </View>
+
     </View>
   );
 };

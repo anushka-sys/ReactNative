@@ -20,19 +20,31 @@ const UserList = props => {
   const [id, setId] = useState();
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const roles = props.route?.params?.selectedRoles || [];
+  const status = props.route?.params?.selectedStatus || null;
+
+  const finalData = users.filter(user => {
+    return (
+      // search
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      // roles
+      (roles.length === 0 || roles.includes(user.role)) &&
+      // status - boolean fix
+      (!status ||
+        (status === 'Active' ? user.status === true : user.status === false))
+    );
+  });
 
   useEffect(() => {
     loadUsers();
-    // setUserList(data);
-    // setFilteredList(data);
-  }, []);
+  }, [props.route?.params?.selectedRoles, props.route?.params?.selectedStatus]);
 
   const loadUsers = async () => {
-  const data = await GetApi();
-  setUsers(data);
-  setFilteredUsers(data); 
-}; 
+    const data = await GetApi();
+    console.log('FIRST USER:', JSON.stringify(data[0]));
+    setUsers(data);
+  };
 
   //Refresh
   const onRefresh = () => {
@@ -64,15 +76,9 @@ const UserList = props => {
     });
   }, [props.navigation]);
 
-const handleSearch = (text) => {
-  setSearchQuery(text);
-
-  const filtered = users.filter((item) =>
-    item.name.toLowerCase().includes(text.toLowerCase())
-  );
-
-  setFilteredUsers(filtered);
-};
+  const handleSearch = text => {
+    setSearchQuery(text);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
@@ -97,8 +103,13 @@ const handleSearch = (text) => {
           </View>
         )}
 
+        {/* console.log('ALL USERS:', JSON.stringify(users.slice(0, 2)));
+        console.log('FINAL DATA:', finalData.length); console.log('ROLES
+        filter:', roles); console.log('STATUS filter:', status);
+        */}
+        
         <FlatList
-          data={filteredUsers}
+          data={finalData}
           keyExtractor={item => item.id}
           contentContainerStyle={{ paddingBottom: 100 }}
           refreshControl={
