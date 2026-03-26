@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchIcon from '../components/SearchIcon';
 import { GetApi, DeleteApi } from '../services/ApiServices';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import NoData from './NoData';
 
 const UserList = props => {
   const [users, setUsers] = useState([]);
@@ -103,50 +104,49 @@ const UserList = props => {
           </View>
         )}
 
-        {/* console.log('ALL USERS:', JSON.stringify(users.slice(0, 2)));
-        console.log('FINAL DATA:', finalData.length); console.log('ROLES
-        filter:', roles); console.log('STATUS filter:', status);
-        */}
-        
-        <FlatList
-          data={finalData}
-          keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 100 }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <Image source={{ uri: item.avatar }} style={styles.avatar} />
+        {finalData.length === 0 ? (
+          <NoData />
+        ) : (
+          <FlatList
+            data={finalData}
+            keyExtractor={item => item.id}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            renderItem={({ item }) => (
+              <View style={styles.container}>
+                <Image source={{ uri: item.avatar }} style={styles.avatar} />
 
-              <View style={styles.info}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.role}>{item.role}</Text>
-                <Text style={styles.email}>{item.email}</Text>
+                <View style={styles.info}>
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text style={styles.role}>{item.role}</Text>
+                  <Text style={styles.email}>{item.email}</Text>
+                </View>
+
+                <View style={styles.formbutton}>
+                  <TouchableOpacity
+                    style={styles.delete}
+                    onPress={() => handleDelete(item.id, { mode: 'Delete' })}
+                  >
+                    <Text style={styles.deltext}>Delete</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.update}
+                    onPress={() =>
+                      props.navigation.navigate('Add Users', { user: item })
+                    }
+                  >
+                    <Text style={styles.uptext}>Update</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-
-              <View style={styles.formbutton}>
-                <TouchableOpacity
-                  style={styles.delete}
-                  onPress={() => handleDelete(item.id, { mode: 'Delete' })}
-                >
-                  <Text style={styles.deltext}>Delete</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.update}
-                  onPress={() =>
-                    props.navigation.navigate('Add Users', { user: item })
-                  }
-                >
-                  <Text style={styles.uptext}>Update</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        )}
       </View>
-
+      
       {/* <View>
        
         <Button title='go to adduser' onPress={()=>props.navigation.navigate("Add Users")} />
