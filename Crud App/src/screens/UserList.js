@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchIcon from '../components/SearchIcon';
@@ -27,18 +28,19 @@ const UserList = props => {
   const status = props.route?.params?.selectedStatus || null;
 
   const finalData = users.filter(user => {
-    console.log('rples array:', roles);
-    console.log('roles:', JSON.stringify(roles));
-    console.log('first user role:', JSON.stringify(users[0]?.role));
-    return (
-      // search name
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      // roles
-      (roles.length === 0 || roles.includes(user.role)) &&
-      // status
-      (!status ||
-        (status === 'Active' ? user.status === true : user.status === false))
-    );
+    const nameMatch = user.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const roleMatch = roles.length === 0 || roles.includes(user.role);
+
+    const userIsActive = user.status === true || user.status === 'active';
+
+    const statusMatch =
+      !status ||
+      (status === 'Active' ? userIsActive === true : userIsActive === false);
+
+    return nameMatch && roleMatch && statusMatch;
   });
 
   useEffect(() => {
@@ -47,8 +49,6 @@ const UserList = props => {
 
   const loadUsers = async () => {
     const data = await GetApi();
-    console.log('FIRST USER:', JSON.stringify(data[0]));
-    // console.log('All roles:',data.map(user=> user.role))
     setUsers(data);
     setLoading(false);
   };
@@ -87,10 +87,6 @@ const UserList = props => {
     setSearchQuery(text);
   };
 
-  console.log('finalData length', finalData.length);
-  console.log('user length', users.length);
-  console.log('unique length', [...new Set(users.map(u => u.role))]);
-
   return (
     <SafeAreaView style={styles.safeArea} edges={['left', 'right', 'bottom']}>
       <View style={styles.page}>
@@ -115,7 +111,10 @@ const UserList = props => {
         )}
 
         {loading ? (
-          <Text style={{ textAlign: 'center', marginTop: 40 }}>Loading...</Text>
+          <View>
+            <Text style={{ textAlign: 'center', marginTop: 40 }}>Loading...</Text>
+            <ActivityIndicator style={{size:20}}></ActivityIndicator>
+          </View>
         ) : finalData.length === 0 ? (
           <NoData
             onClear={() =>
@@ -281,193 +280,3 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-// [
-//   {
-//     email: 'jay@gmailcom',
-//     name: 'Jay',
-//     avatar: 'https://avatars.githubusercontent.com/u/20068312',
-//     phone: 1234567890,
-//     status: true,
-//     role: 'Employee',
-//     id: '2',
-//   },
-//   {
-//     email: 'rohit@gmailcom',
-//     name: 'Rohit Sharma',
-//     avatar: 'https://avatars.githubusercontent.com/u/10650461',
-//     phone: 1234567890,
-//     status: true,
-//     role: 'Employee',
-//     id: '4',
-//   },
-//   {
-//     email: 'varun@gmailcom',
-//     name: 'Varun Das',
-//     avatar:
-//       'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/2.jpg',
-//     phone: 1234567890,
-//     status: false,
-//     role: 'Employee',
-//     id: '5',
-//   },
-//   {
-//     email: 'shre@gmail.com',
-//     name: 'Shreya',
-//     avatar:
-//       'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/53.jpg',
-//     phone: '1234567890',
-//     status: 'active',
-//     role: 'Admin',
-//     id: '8',
-//   },
-//   {
-//     email: 'reena@gmail.com',
-//     name: 'Reena',
-//     avatar:
-//       'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/4.jpg',
-//     phone: '1234567890',
-//     status: 'inactive',
-//     role: 'Admin',
-//     id: '10',
-//   },
-//   {
-//     email: 'anusghka@xyzl.com',
-//     name: 'anushka',
-//     avatar: 'https://avatars.githubusercontent.com/u/91465225',
-//     phone: '9356847532',
-//     status: 'active',
-//     role: 'Admin',
-//     id: '11',
-//   },
-//   {
-//     email: 'shoan@email.com',
-//     name: 'Shoan',
-//     avatar: 'https://avatars.githubusercontent.com/u/63366228',
-//     phone: '1234567890',
-//     status: 'inactive',
-//     role: 'Admin',
-//     id: '12',
-//   },
-//   {
-//     email: 'anuhska@gmail.com',
-//     name: 'Anushka',
-//     avatar:
-//       'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/26.jpg',
-//     phone: '1234567890',
-//     status: 'active',
-//     role: 'Manager',
-//     id: '13',
-//   },
-//   {
-//     email: 'raj@gmail.com',
-//     name: 'Raj',
-//     avatar:
-//       'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/60.jpg',
-//     phone: '1234567890',
-//     status: 'active',
-//     role: 'Manager',
-//     id: '14',
-//   },
-// ];
-
-/*
-rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:114 finalData length 9
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:115 user length 9
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:116 unique length Array(3)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:62 FIRST USER: {"email":"jay@gmailcom","name":"Jay","avatar":"https://avatars.githubusercontent.com/u/20068312","phone":1234567890,"status":true,"role":"Employee","id":"2"}
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: []
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:114 finalData length 9
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:115 user length 9
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:116 unique length Array(3)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:114 finalData length 0
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:115 user length 0
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:116 unique length Array(0)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:62 FIRST USER: {"email":"jay@gmailcom","name":"Jay","avatar":"https://avatars.githubusercontent.com/u/20068312","phone":1234567890,"status":true,"role":"Employee","id":"2"}
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:44 rples array: Array(2)
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:45 roles: ["Admin","Employee"]
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:46 first user role: "Employee"
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:114 finalData length 1
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:115 user length 9
-&platform=android&dev=true&lazy=true&minify=false&app=com.myapp&modulesOnly=true&runModule=true&sourcePaths=url-server&shallow=true:116 unique length Array(3)
-Welcome to React Native DevTools
-Debugger integration: Andro
- */
