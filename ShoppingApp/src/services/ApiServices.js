@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 
-//Get API
+
 export const GetApi = async () => {
   try {
     const response = await axios.get(
