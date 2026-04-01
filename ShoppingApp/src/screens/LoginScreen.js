@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import { fontsizes, Color,fontWeights } from '../styles';
+import { fontsizes, Color } from '../styles/index.js';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import { useNavigation } from '@react-navigation/native';
@@ -55,7 +55,9 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => {
+              Navigation.navigate('GetStartedScreen');
+            }}>
           <Text style={styles.buttontitle}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -83,7 +85,11 @@ const LoginScreen = () => {
       <View style={styles.Bottomcontainer}>
         <Text style={styles.textbottom}>
           Create An Account
-          <TouchableOpacity onPress={()=>{Navigation.navigate('SignUp')}}>
+          <TouchableOpacity
+            onPress={() => {
+              Navigation.navigate('SignUp');
+            }}
+          >
             <Text style={styles.signup}> Sign Up</Text>
           </TouchableOpacity>
         </Text>
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     //justifyContent: 'center'
   },
   title: {
-    fontWeight: fontWeights.ed,
+    fontWeight: '700',
     fontSize: fontsizes.l,
     top: 63,
     left: 32,
