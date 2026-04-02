@@ -1,35 +1,43 @@
-import { StyleSheet, Text, View, TextInput, Image, FlatList, TouchableOpacity, } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/Feather';
-import {GetApi} from '../services/ApiServices'
+import { GetApi } from '../services/ApiServices';
+import AppHeader from '../components/AppHeader';
+import SearchBar from '../components/SearchBar';
+import ProductList from "../components/ProductList";
 
 const HomePage = () => {
- const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
-useEffect(() => {
+  const filteredProducts = products.filter(product => {
+    if (searchText === '') return true;
+    return product.title.toLowerCase().includes(searchText.toLowerCase());
+  });
+
+  useEffect(() => {
     const loadUsers = async () => {
-    const data = await GetApi();
-    setUsers(data);
-  };
+      const data = await GetApi();
+      console.log('data:', data);
+      setProducts(data);
+    };
     loadUsers();
+    
   }, []);
-  
+
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <View style={styles.menucontainer}>
-          <Image source={require('../assets/lines.png')} style={styles.menuimg} />
-          <Image source={require('../assets/logo.png')} style={styles.logo} />
-          <Image source={require('../assets/profile.png')} style={styles.profile} />
-        </View>
-        <View style={styles.searchSection}>
-          <View style={styles.searchContainer}>
-            <Icon name="search" size={19} color="#BBBBBB" />
-            <TextInput placeholder="Search any Product.." style={styles.input} />
-            <Icon name="mic" size={16} color="#BBBBBB" />
-          </View>
-        </View>
+        <AppHeader />
+
+        <SearchBar value={searchText} onChangeText={setSearchText} />
+
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>All Featured</Text>
           <View style={styles.filterButtons}>
@@ -42,34 +50,22 @@ useEffect(() => {
           </View>
         </View>
         <View style={styles.imgcontainer}>
-          <Image source={require('../assets/makeup.png')} style={styles.makeup} />
-          <Image source={require('../assets/fashion.png')} style={styles.makeup} />
+          <Image
+            source={require('../assets/makeup.png')}
+            style={styles.makeup}
+          />
+          <Image
+            source={require('../assets/fashion.png')}
+            style={styles.makeup}
+          />
           <Image source={require('../assets/kids.png')} style={styles.makeup} />
           <Image source={require('../assets/mens.png')} style={styles.makeup} />
-          <Image source={require('../assets/woemns.png')} style={styles.makeup} />
-        </View>
-        <View>
-          <FlatList
-            data={users}
-            keyExtractor={item => item.id}
-            numColumns={2} 
-            renderItem={({ item }) => (
-              <View key={item.id} style={styles.productCard}>
-                <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.productImage} />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productTitle} >
-                    {item.title}
-                  </Text>
-                  <Text style={styles.productDesc} >
-                    {item.desc}
-                  </Text>
-                  <Text style={styles.productPrice}>{item.price}</Text>
-                  <Text style={styles.productRating}> ⭐ {item.rating} ({item.reviews}) </Text>
-                </View>
-              </View>
-            )}
+          <Image
+            source={require('../assets/woemns.png')}
+            style={styles.makeup}
           />
         </View>
+        <ProductList products={filteredProducts} />
       </View>
     </SafeAreaProvider>
   );
@@ -107,7 +103,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.1,
   },
@@ -125,10 +121,10 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   filterButtons: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   chip: {
     backgroundColor: '#FFF',
@@ -163,6 +159,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: '100%',
     height: 150,
+    resizeMode: 'contain',
   },
   productInfo: {
     padding: 10,
