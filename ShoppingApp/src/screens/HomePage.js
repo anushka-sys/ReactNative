@@ -65,7 +65,7 @@ const HomePage = () => {
             style={styles.makeup}
           />
         </View>
-        <ProductList products={filteredProducts} />
+        <ProductList products={filteredProducts} /> //flatlist
       </View>
     </SafeAreaProvider>
   );
