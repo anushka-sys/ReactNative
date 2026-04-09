@@ -1,9 +1,15 @@
 import React from "react";
-import { View, Text, Image, FlatList, StyleSheet } from "react-native";
+import { View, Text, Image, FlatList, StyleSheet,TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const ProductList = ({ products }) => {
+const navigation = useNavigation ();
+
   const renderItem = ({ item }) => (
-    <View style={styles.productCard}>
+   <TouchableOpacity style={styles.productCard} 
+   onPress={() => navigation.navigate('ProductDetails', { product: item })}
+   >
+     <View>
       <Image source={{ uri: item.image }} style={styles.productImage} />
 
       <View style={styles.productInfo}>
@@ -22,6 +28,7 @@ const ProductList = ({ products }) => {
         </Text>
       </View>
     </View>
+   </TouchableOpacity>
   );
 
   return (
@@ -30,7 +37,6 @@ const ProductList = ({ products }) => {
       keyExtractor={(item) => item.id.toString()}
       numColumns={2}
       renderItem={renderItem}
-      showsVerticalScrollIndicator={false}
     />
   );
 };
@@ -45,6 +51,7 @@ const styles = StyleSheet.create({
     margin: 5,
     overflow: "hidden",
     elevation: 2,
+    paddingTop: 10,
   },
   productImage: {
     width: "100%",
