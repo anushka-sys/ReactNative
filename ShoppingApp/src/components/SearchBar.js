@@ -9,7 +9,7 @@ const SearchBar = ({ value, onChangeText }) => {
         <Icon name="search" size={18} color="#BBBBBB" />
 
         <TextInput
-          placeholder="Search any Product.."  //change text
+          placeholder="Search any Product.."
           placeholderTextColor="#BBBBBB"
           style={styles.input}
           value={value}
