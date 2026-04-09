@@ -24,7 +24,6 @@ const CartScreen = () => {
     getTotalPrice,
   } = useContext(CartContext);
 
-
   // total calculation
   let totalAmount = 0;
   cartItems.forEach(item => {
@@ -35,8 +34,16 @@ const CartScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         {/* HEADER */}
-        <TouchableOpacity style={styles.header} onPress={()=>navigation.goBack()}>
-            <Iconarrow name="chevron-thin-left" size={20} color="#323232" style={styles.back}/>
+        <TouchableOpacity
+          style={styles.header}
+          onPress={() => navigation.goBack()}
+        >
+          <Iconarrow
+            name="chevron-thin-left"
+            size={20}
+            color="#323232"
+            style={styles.back}
+          />
         </TouchableOpacity>
 
         {/* PRODUCT CARD */}
@@ -45,10 +52,14 @@ const CartScreen = () => {
             <Image source={{ uri: item.image }} style={styles.image} />
 
             <View style={styles.details}>
-              <Text numberOfLines={1} style={styles.title}>{item.title}</Text>
-              <Text numberOfLines={2} style={styles.subtitle}>{item.description}</Text>
+              <Text numberOfLines={1} style={styles.title}>
+                {item.title}
+              </Text>
+              <Text numberOfLines={2} style={styles.subtitle}>
+                {item.description}
+              </Text>
               <Text style={styles.subtitle}>{item.category}</Text>
-               <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
+              <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
 
               {/* Qty Selector */}
               <View style={styles.qtyRow}>
@@ -64,20 +75,25 @@ const CartScreen = () => {
                   <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
                     <Text style={styles.qtyBtn}>{'+'}</Text>
                   </TouchableOpacity>
-
                 </View>
-                 <TouchableOpacity onPress={()=> removeFromCart(item.id)}>
-                    <Icon
-                      name="delete"
-                      size={20}
-                      color="red"
-                      style={styles.icon}
-                    />
-                  </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                  <Icon
+                    name="delete"
+                    size={20}
+                    color="red"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
         ))}
+
+        <View style={styles.coupon}>
+          <Image source={require('../assets/coupon.png')} style={styles.couponimg}/>
+          <Text style={styles.coupontxt}>Apply Coupons</Text>
+          <Text style={styles.coupontxts}>Select</Text>
+        </View>
 
         {/* ORDER PAYMENT DETAILS */}
         <View style={styles.paymentCard}>
@@ -100,7 +116,17 @@ const CartScreen = () => {
             <Text style={styles.totalValue}>₹ {totalAmount.toFixed(0)}</Text>
           </View>
 
-          <Text style={styles.emi}>EMI Available</Text>
+          <View style={styles.emicontainer}>
+            <Text style={styles.emit}>EMI Available</Text>
+          <Text style={styles.emi}>Details</Text>
+          </View>
+
+         
+        </View>
+        <View style={styles.bottomcontainer} >
+           <TouchableOpacity style={styles.bottom}>
+            <Text style={styles.bottomtxt}>Proceed to Payment</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -132,7 +158,7 @@ const styles = StyleSheet.create({
     width: 123,
     height: 153,
     borderRadius: 8,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
 
   details: {
@@ -148,7 +174,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#777',
     marginTop: 2,
-    fontSize:13,
+    fontSize: 13,
   },
 
   meta: {
@@ -216,17 +242,12 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
 
-  rowLabel: {
-    color: '#555',
-  },
-
   rowValue: {
     fontWeight: '600',
   },
 
   free: {
-    color: 'green',
-    fontWeight: '600',
+    color: '#F83758',
   },
 
   divider: {
@@ -247,14 +268,62 @@ const styles = StyleSheet.create({
 
   emi: {
     marginTop: 6,
-    color: '#ff3f6c',
+    color: '#F83758',
     fontSize: 12,
+    paddingLeft:210,
   },
-  icon:{
-    padding:10,
-    marginLeft:55,
+  icon: {
+    padding: 10,
+    marginLeft: 55,
   },
-  back:{
-    paddingTop:5,
+  back: {
+    paddingTop: 5,
+  },
+
+  couponimg :{
+    height:20,
+    width:31,
+  },
+  coupon:{
+    marginTop:10,
+    backgroundColor:'#fff',
+    padding:7,
+    paddingLeft:20,
+    flexDirection:'row',
+    gap:15,
+  },
+  coupontxt:{
+    fontSize:15,
+  },
+  coupontxts:{
+    color:'#F83758',
+    fontSize:12,
+    fontWeight:'500',
+    paddingLeft:120,
+  },
+  emicontainer:{
+    flexDirection:'row',
+  },
+  emit:{
+    marginTop: 5,
+  },
+  bottomcontainer:{
+    borderWidth:1,
+    borderRadius:5,
+    borderColor:'red',
+    height:48,
+    width:219,
+    backgroundColor:'#F83758',
+    alignItems:'center',
+    justifyContent:'center',
+    //position:'absolute',
+    marginBottom:100,
+    marginLeft:130,
+  },
+  bottomtxt:{
+    color:'white',
+    fontWeight:'500',
+    fontSize:15,
   }
+
 });

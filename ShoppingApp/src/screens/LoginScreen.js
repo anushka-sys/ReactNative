@@ -7,7 +7,14 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import { fontsizes, Color } from '../styles/index.js';
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  spacing,
+  radius,
+  layout,
+} from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import { useNavigation } from '@react-navigation/native';
@@ -55,9 +62,12 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => {
-              Navigation.navigate('GetStartedScreen');
-            }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            Navigation.navigate('GetStartedScreen');
+          }}
+        >
           <Text style={styles.buttontitle}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -101,15 +111,12 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //justifyContent: 'center'
-  },
+  container: { flex: 1 },
   title: {
-    fontWeight: '700',
-    fontSize: fontsizes.l,
-    top: 63,
-    left: 32,
+    fontWeight: fontWeights.bold,
+    fontSize: fontSizes.screenTitle,
+    top: spacing.authTitleTop,
+    left: spacing.authTitleLeft,
     width: 185,
     height: 83,
   },
@@ -118,86 +125,66 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#A8A8A9',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    height: 45,
-    width: 310,
-    marginLeft: 25,
-    backgroundColor: '#e4e4e4',
-    marginBottom: 20,
+    borderColor: colors.border,
+    borderRadius: radius.input,
+    paddingHorizontal: spacing.inputPaddingH,
+    height: layout.inputHeight,
+    width: layout.inputWidth,
+    marginLeft: spacing.inputMarginLeft,
+    backgroundColor: colors.backgroundInput,
+    marginBottom: spacing.inputMarginBottom,
   },
-  icon: {
-    marginRight: 20,
-  },
+  icon: { marginRight: spacing.iconMarginRight },
   input: {
     flex: 1,
     height: '100%',
-    padding: 0,
-    fontSize: 11,
+    padding: spacing.none,
+    fontSize: fontSizes.inputText,
   },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 150,
-  },
+  buttonContainer: { justifyContent: 'center', alignItems: 'center', top: 150 },
   button: {
     borderWidth: 1,
-    borderRadius: 4,
-    backgroundColor: Color.buttoncolor,
-    borderColor: Color.buttoncolor,
-    //width:130,
-    height: 40,
-    width: 290,
+    borderRadius: radius.button,
+    backgroundColor: colors.primary,
+    borderColor: colors.primaryBorder,
+    height: layout.primaryButtonHeight,
+    width: layout.primaryButtonWidth,
   },
   buttontitle: {
-    padding: 8,
-    paddingLeft: 120,
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 15,
+    padding: spacing.buttonPaddingV,
+    paddingLeft: spacing.buttonPaddingLeft,
+    color: colors.textOnPrimary,
+    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.buttonPrimary,
   },
-  forgot: {
-    top: 80,
-    marginLeft: 245,
-  },
-  forgotText: {
-    color: Color.buttoncolor,
-    fontSize: 11,
-  },
+  forgot: { top: 80, marginLeft: 245 },
+  forgotText: { color: colors.primary, fontSize: fontSizes.sm },
   ImageContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: spacing.lg,
     top: 200,
     paddingLeft: 80,
   },
   image: {
-    height: 55,
-    width: 55,
+    height: layout.socialIconSizeLarge,
+    width: layout.socialIconSizeLarge,
   },
-  textcontainer: {
-    top: 175,
-    marginLeft: 115,
-  },
+  textcontainer: { top: 175, marginLeft: 115 },
   text: {
-    color: '#575757',
-    fontWeight: '500',
-    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
-  Bottomcontainer: {
-    top: 220,
-    marginLeft: 115,
-  },
+  Bottomcontainer: { top: 220, marginLeft: 115 },
   textbottom: {
-    color: '#575757',
-    fontWeight: '500',
-    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
   signup: {
-    color: Color.buttoncolor,
+    color: colors.primary,
     textDecorationLine: 'underline',
-    fontWeight: '500',
-    fontSize: 12,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
 });
