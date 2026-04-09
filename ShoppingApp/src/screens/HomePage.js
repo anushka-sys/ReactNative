@@ -1,16 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GetApi } from '../services/ApiServices';
 import AppHeader from '../components/AppHeader';
 import SearchBar from '../components/SearchBar';
-import ProductList from "../components/ProductList";
+import ProductList from '../components/ProductList';
+import Filter from '../components/Filter'
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -20,7 +15,7 @@ const HomePage = () => {
     if (searchText === '') return true;
     return product.title.toLowerCase().includes(searchText.toLowerCase());
   });
-
+           
   useEffect(() => {
     const loadUsers = async () => {
       const data = await GetApi();
@@ -28,7 +23,6 @@ const HomePage = () => {
       setProducts(data);
     };
     loadUsers();
-    
   }, []);
 
   return (
@@ -37,18 +31,8 @@ const HomePage = () => {
         <AppHeader />
 
         <SearchBar value={searchText} onChangeText={setSearchText} />
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>All Featured</Text>
-          <View style={styles.filterButtons}>
-            <TouchableOpacity style={styles.chip}>
-              <Text>Sort ⇅</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.chip}>
-              <Text>Filter ▽</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          <Filter />
+        
         <View style={styles.imgcontainer}>
           <Image
             source={require('../assets/makeup.png')}
@@ -65,7 +49,7 @@ const HomePage = () => {
             style={styles.makeup}
           />
         </View>
-        <ProductList products={filteredProducts} /> //flatlist
+        <ProductList products={filteredProducts} />
       </View>
     </SafeAreaProvider>
   );
@@ -76,7 +60,7 @@ export default HomePage;
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    paddingTop: 30,
+    paddingTop: 17,
     flex: 1,
   },
   menucontainer: {
@@ -117,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -141,45 +125,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 7,
   },
   makeup: {
     height: 50,
     width: 50,
-  },
-  /* productGrid style removed */
-  productCard: {
-    width: '47%',
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    margin: 5, // Added margin
-    overflow: 'hidden',
-    elevation: 2,
-  },
-  productImage: {
-    width: '100%',
-    height: 150,
-    resizeMode: 'contain',
-  },
-  productInfo: {
-    padding: 10,
-  },
-  productTitle: {
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  productDesc: {
-    fontSize: 11,
-    color: '#666',
-    marginVertical: 4,
-  },
-  productPrice: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  productRating: {
-    fontSize: 10,
-    color: '#AAA',
-    marginTop: 5,
   },
 });

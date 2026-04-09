@@ -19,7 +19,7 @@ const GetStartedScreen = () => {
         <Text style={styles.smalltext}>Find it here, buy it now!</Text>
         <TouchableOpacity
           onPress={() => {
-            Navigation.navigate('HomePage');
+            Navigation.navigate('MainTabs');
           }}
           style={styles.button}
         >
