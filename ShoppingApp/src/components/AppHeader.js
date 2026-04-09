@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingTop:0,
   },
   icon: {
     width: 28,
