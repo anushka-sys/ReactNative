@@ -1,22 +1,46 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Lucide } from '@react-native-vector-icons/lucide';
-import { Menu, Divider, PaperProvider } from 'react-native-paper';
+import { Menu } from 'react-native-paper';
 
 const Filter = () => {
-    
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const onSelect = category => {
+    console.log('Selected:', category);
+    closeMenu();
+  };
+
   return (
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>All Featured</Text>
+
       <View style={styles.filterButtons}>
+    
         <TouchableOpacity style={styles.chip}>
           <Text>Sort</Text>
-         <Lucide name="filter" size={15} color="#000" />;
+          <Lucide name="arrow-down-up" size={15} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.chip}>
-          <Text>Filter</Text>
-          <Lucide name="arrow-down-up" size={15} color="#000" />;
-        </TouchableOpacity>
+
+        
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={
+            <TouchableOpacity style={styles.chip} onPress={openMenu}>
+              <Text>Filter</Text>
+              <Lucide name="filter" size={15} color="#000" />
+            </TouchableOpacity>
+          }
+        >
+          <Menu.Item onPress={() => onSelect('Mens')} title="Mens" />
+          <Menu.Item onPress={() => onSelect('Women')} title="Women" />
+          <Menu.Item onPress={() => onSelect('Jewellery')} title="Jewellery" />
+          <Menu.Item onPress={() => onSelect('Kids')} title="Kids" />
+        </Menu>
       </View>
     </View>
   );
@@ -25,7 +49,7 @@ const Filter = () => {
 export default Filter;
 
 const styles = StyleSheet.create({
-      sectionHeader: {
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -49,5 +73,6 @@ const styles = StyleSheet.create({
     borderColor: '#EEE',
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
   },
 });

@@ -12,6 +12,7 @@ const InputBox = () => {
           placeholder="Enter username"
           placeholderTextColor="#626262"
         />
+        
       </View>
   );
 };
