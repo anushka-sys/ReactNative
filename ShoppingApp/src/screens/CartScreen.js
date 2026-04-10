@@ -1,136 +1,114 @@
 import React, { useContext } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
+  View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,
 } from 'react-native';
 import { CartContext } from '../context/Context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
+import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles';
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const {
     cartItems,
-    addToCart,
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
-    clearCart,
-    getTotalPrice,
   } = useContext(CartContext);
 
-  // total calculation
   let totalAmount = 0;
   cartItems.forEach(item => {
-    totalAmount = totalAmount + item.price * item.quantity;
+    totalAmount += item.price * item.quantity;
   });
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        {/* HEADER */}
-        <TouchableOpacity
-          style={styles.header}
-          onPress={() => navigation.goBack()}
-        >
-          <Iconarrow
-            name="chevron-thin-left"
-            size={20}
-            color="#323232"
-            style={styles.back}
-          />
-        </TouchableOpacity>
+  <View style={styles.container}>
+    
+    <ScrollView 
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
 
-        {/* PRODUCT CARD */}
-        {cartItems.map(item => (
-          <View style={styles.card} key={item.id}>
-            <Image source={{ uri: item.image }} style={styles.image} />
+      {/* header */}
+      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
+        <Iconarrow name="chevron-thin-left" size={20} color={colors.iconMuted} style={styles.back} />
+      </TouchableOpacity>
 
-            <View style={styles.details}>
-              <Text numberOfLines={1} style={styles.title}>
-                {item.title}
-              </Text>
-              <Text numberOfLines={2} style={styles.subtitle}>
-                {item.description}
-              </Text>
-              <Text style={styles.subtitle}>{item.category}</Text>
-              <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
+      {/* product cards */}
+      {cartItems.map(item => (
+        <View style={styles.card} key={item.id}>
+          <Image source={{ uri: item.image }} style={styles.image} />
 
-              {/* Qty Selector */}
-              <View style={styles.qtyRow}>
-                <Text style={styles.qtyLabel}>Qty</Text>
+          <View style={styles.details}>
+            <Text numberOfLines={1} style={styles.title}>{item.title}</Text>
+            <Text numberOfLines={2} style={styles.subtitle}>{item.description}</Text>
+            <Text style={styles.subtitle}>{item.category}</Text>
+            <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
 
-                <View style={styles.qtySelector}>
-                  <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
-                    <Text style={styles.qtyBtn}>{'-'}</Text>
-                  </TouchableOpacity>
+            <View style={styles.qtyRow}>
+              <Text style={styles.qtyLabel}>Qty</Text>
 
-                  <Text style={styles.qtyText}>{item.quantity}</Text>
-
-                  <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
-                    <Text style={styles.qtyBtn}>{'+'}</Text>
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                  <Icon
-                    name="delete"
-                    size={20}
-                    color="red"
-                    style={styles.icon}
-                  />
+              <View style={styles.qtySelector}>
+                <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
+                  <Text style={styles.qtyBtn}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.qtyText}>{item.quantity}</Text>
+                <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
+                  <Text style={styles.qtyBtn}>+</Text>
                 </TouchableOpacity>
               </View>
+
+              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                <Icon name="delete" size={20} color={colors.danger} style={styles.deleteIcon} />
+              </TouchableOpacity>
             </View>
           </View>
-        ))}
+        </View>
+      ))}
 
-        <View style={styles.coupon}>
-          <Image source={require('../assets/coupon.png')} style={styles.couponimg}/>
-          <Text style={styles.coupontxt}>Apply Coupons</Text>
-          <Text style={styles.coupontxts}>Select</Text>
+      {/* coupon */}
+      <View style={styles.coupon}>
+        <Image source={require('../assets/coupon.png')} style={styles.couponImg} />
+        <Text style={styles.couponTxt}>Apply Coupons</Text>
+        <Text style={styles.couponLink}>Select</Text>
+      </View>
+
+      {/* oder details */}
+      <View style={styles.paymentCard}>
+        <Text style={styles.paymentTitle}>Order Payment Details</Text>
+
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>Order Amounts</Text>
+          <Text style={styles.rowValue}>₹ {totalAmount.toFixed(0)}</Text>
         </View>
 
-        {/* ORDER PAYMENT DETAILS */}
-        <View style={styles.paymentCard}>
-          <Text style={styles.paymentTitle}>Order Payment Details</Text>
-
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Order Amounts</Text>
-            <Text style={styles.rowValue}>₹ {totalAmount.toFixed(0)}</Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Delivery Fee</Text>
-            <Text style={styles.free}>Free</Text>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.row}>
-            <Text style={styles.totalLabel}>Order Total</Text>
-            <Text style={styles.totalValue}>₹ {totalAmount.toFixed(0)}</Text>
-          </View>
-
-          <View style={styles.emicontainer}>
-            <Text style={styles.emit}>EMI Available</Text>
-          <Text style={styles.emi}>Details</Text>
-          </View>
-
-         
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>Delivery Fee</Text>
+          <Text style={styles.freeText}>Free</Text>
         </View>
-        <View style={styles.bottomcontainer} >
-           <TouchableOpacity style={styles.bottom}>
-            <Text style={styles.bottomtxt}>Proceed to Payment</Text>
-          </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <View style={styles.row}>
+          <Text style={styles.totalLabel}>Order Total</Text>
+          <Text style={styles.totalValue}>₹ {totalAmount.toFixed(0)}</Text>
         </View>
-      </ScrollView>
+
+      </View>
+
+    </ScrollView>
+
+  
+    <View style={styles.checkoutBar}>
+      <TouchableOpacity style={styles.checkoutButton}>
+        <Text style={styles.checkoutButtonTxt}>Proceed to Payment</Text>
+      </TouchableOpacity>
     </View>
-  );
+
+  </View>
+);
 };
 
 export default CartScreen;
@@ -138,192 +116,186 @@ export default CartScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.backgroundSecondary,
+  },
+  header: {
+    fontWeight: fontWeights.bold,
+    padding: spacing['3xl'],
+    backgroundColor: colors.backgroundPrimary,
+  },
+  back: {
+    paddingTop: spacing.sm,
   },
 
-  header: {
-    // fontSize: 20,
-    fontWeight: '700',
-    padding: 15,
-    backgroundColor: '#fff',
-  },
 
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 14,
-    marginTop: 10,
+    backgroundColor: colors.backgroundPrimary,
+    padding: spacing.cardPadding,
+    marginTop: spacing.lg,
   },
-
   image: {
-    width: 123,
-    height: 153,
-    borderRadius: 8,
+    width: layout.cartProductImageWidth,
+    height: layout.cartProductImageHeight,
+    borderRadius: radius.image,
     resizeMode: 'contain',
   },
-
   details: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: spacing['3xl'],
   },
-
   title: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes['2xl'],
+    fontWeight: fontWeights.bold,
   },
-
   subtitle: {
-    color: '#777',
-    marginTop: 2,
-    fontSize: 13,
-  },
-
-  meta: {
-    marginTop: 6,
-    color: '#777',
-  },
-
-  bold: {
-    fontWeight: '700',
-    color: '#000',
+    color: colors.textMuted,
+    marginTop: spacing.xxs,
+    fontSize: fontSizes.md,
   },
 
   qtyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: spacing.md,
   },
-
   qtyLabel: {
-    marginRight: 8,
-    color: '#777',
+    marginRight: spacing.md,
+    color: colors.textMuted,
   },
-
   qtySelector: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+    borderColor: colors.borderLight,
+    borderRadius: radius.qtySelector,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.qtyBtnPaddingV,
     alignItems: 'center',
   },
-
   qtyBtn: {
-    fontSize: 18,
-    paddingHorizontal: 8,
+    fontSize: fontSizes['3xl'],
+    paddingHorizontal: spacing.qtyBtnPaddingH,
   },
-
   qtyText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSizes.lg,
+    fontWeight: fontWeights.semiBold,
+  },
+  deleteIcon: {
+    padding: spacing.iconPadding,
+    marginLeft: 55,
   },
 
-  delivery: {
-    marginTop: 8,
-    color: '#777',
-    fontSize: 12,
+
+  coupon: {
+    marginTop: spacing.lg,
+    backgroundColor: colors.backgroundPrimary,
+    padding: spacing.xs + spacing.xxs,
+    paddingLeft: spacing.couponPaddingLeft,
+    flexDirection: 'row',
+    gap: spacing.couponGap,
+  },
+  couponImg: {
+    height: layout.couponImageHeight,
+    width: layout.couponImageWidth,
+  },
+  couponTxt: {
+    fontSize: fontSizes.xl,
+  },
+  couponLink: {
+    color: colors.primary,
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.medium,
+    paddingLeft: 120,
   },
 
   paymentCard: {
-    backgroundColor: '#fff',
-    marginTop: 14,
-    padding: 16,
+    backgroundColor: colors.backgroundPrimary,
+    marginTop: spacing.cardSpacing,
+    padding: spacing.paymentPadding,
   },
-
   paymentTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 12,
+    fontSize: fontSizes['2xl'],
+    fontWeight: fontWeights.bold,
+    marginBottom: spacing.xl,
   },
-
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 6,
+    marginVertical: spacing.xs + spacing.xxs,
   },
-
+  rowLabel: {
+    color: colors.textPrimary,
+  },
   rowValue: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semiBold,
   },
-
-  free: {
-    color: '#F83758',
+  freeText: {
+    color: colors.free,
   },
-
   divider: {
     height: 1,
-    backgroundColor: '#eee',
-    marginVertical: 10,
+    backgroundColor: colors.divider,
+    marginVertical: spacing.lg,
   },
-
   totalLabel: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes['2xl'],
+    fontWeight: fontWeights.bold,
   },
-
   totalValue: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes['2xl'],
+    fontWeight: fontWeights.bold,
+  },
+  emiContainer: {
+    flexDirection: 'row',
+  },
+  emiText: {
+    marginTop: spacing.sm,
+  },
+  emiLink: {
+    marginTop: spacing.xs + spacing.xxs,
+    color: colors.primary,
+    fontSize: fontSizes.base,
+    paddingLeft: 210,
   },
 
-  emi: {
-    marginTop: 6,
-    color: '#F83758',
-    fontSize: 12,
-    paddingLeft:210,
+  bottomContainer: {
+    borderWidth: 1,
+    borderRadius: radius.cartButton,
+    borderColor: colors.primaryBorder,
+    height: layout.cartCheckoutButtonHeight,
+    width: layout.cartCheckoutButtonWidth,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 100,
+    marginLeft: 130,
   },
-  icon: {
-    padding: 10,
-    marginLeft: 55,
-  },
-  back: {
-    paddingTop: 5,
-  },
+scrollContent: {
+  paddingBottom: 120, 
+},
 
-  couponimg :{
-    height:20,
-    width:31,
-  },
-  coupon:{
-    marginTop:10,
-    backgroundColor:'#fff',
-    padding:7,
-    paddingLeft:20,
-    flexDirection:'row',
-    gap:15,
-  },
-  coupontxt:{
-    fontSize:15,
-  },
-  coupontxts:{
-    color:'#F83758',
-    fontSize:12,
-    fontWeight:'500',
-    paddingLeft:120,
-  },
-  emicontainer:{
-    flexDirection:'row',
-  },
-  emit:{
-    marginTop: 5,
-  },
-  bottomcontainer:{
-    borderWidth:1,
-    borderRadius:5,
-    borderColor:'red',
-    height:48,
-    width:219,
-    backgroundColor:'#F83758',
-    alignItems:'center',
-    justifyContent:'center',
-    //position:'absolute',
-    marginBottom:100,
-    marginLeft:130,
-  },
-  bottomtxt:{
-    color:'white',
-    fontWeight:'500',
-    fontSize:15,
-  }
+checkoutBar: {
+  position: 'absolute',
+  bottom: 0,
+  left: 100,
+  right: 0,
+  //backgroundColor: colors.backgroundPrimary,
+  padding: spacing.lg,
+  borderTopWidth: 1,
+  borderColor: colors.borderLight,
+},
 
+checkoutButton: {
+  backgroundColor: colors.primary,
+  height: 45,
+  borderRadius: radius.cartButton,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+checkoutButtonTxt: {
+  color: colors.textOnPrimary,
+  fontWeight: fontWeights.bold,
+  fontSize: fontSizes.xl,
+},
 });
