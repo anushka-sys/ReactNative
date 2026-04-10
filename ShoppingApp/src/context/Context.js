@@ -1,9 +1,9 @@
 import React, { createContext, useState } from 'react';
 
-export const CartContext = createContext();
+export const CartContext = createContext(); //creates actual conttext object
 
 const Context = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]); //array holding all items inside cart
 
   // Add Item
   const addToCart = (product) => {
@@ -17,6 +17,18 @@ const Context = ({ children }) => {
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
+
+  // const addToCart = (product) => {
+  // const item = cartItems.find((i) => i.id === product.id);
+
+  // if (item) {
+  //   item.quantity = item.quantity + 1;
+  //   setCartItems([...cartItems]);
+  // } else {
+  //   product.quantity = 1;
+  //   setCartItems([...cartItems, product]);
+  // }
+//};
 
   // Remove Item
   const removeFromCart = (productId) => {
@@ -33,6 +45,17 @@ const Context = ({ children }) => {
     );
     setCartItems(updated);
   };
+
+//   const increaseQuantity = (productId) => {
+//   const updatedCart = cartItems.map((item) => {
+//     if (item.id === productId) {
+//       item.quantity = item.quantity + 1;
+//     }
+//     return item;
+//   });
+
+//   setCartItems(updatedCart);
+// };
 
   // Decrease Quantity
   const decreaseQuantity = (productId) => {

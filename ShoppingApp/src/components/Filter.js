@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import { Lucide } from '@react-native-vector-icons/lucide';
 import { Menu } from 'react-native-paper';
 
-const Filter = () => {
+const Filter = ({ onSelectCategory }) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
   const onSelect = category => {
-    console.log('Selected:', category);
+    onSelectCategory(category);
     closeMenu();
   };
 
@@ -19,13 +19,11 @@ const Filter = () => {
       <Text style={styles.sectionTitle}>All Featured</Text>
 
       <View style={styles.filterButtons}>
-    
         <TouchableOpacity style={styles.chip}>
           <Text>Sort</Text>
           <Lucide name="arrow-down-up" size={15} color="#000" />
         </TouchableOpacity>
 
-        
         <Menu
           visible={visible}
           onDismiss={closeMenu}
@@ -36,10 +34,17 @@ const Filter = () => {
             </TouchableOpacity>
           }
         >
-          <Menu.Item onPress={() => onSelect('Mens')} title="Mens" />
-          <Menu.Item onPress={() => onSelect('Women')} title="Women" />
-          <Menu.Item onPress={() => onSelect('Jewellery')} title="Jewellery" />
-          <Menu.Item onPress={() => onSelect('Kids')} title="Kids" />
+          <Menu.Item onPress={() => onSelect('All')} title="All" />
+          <Menu.Item onPress={() => onSelect("men's clothing")} title="Mens" />
+          <Menu.Item
+            onPress={() => onSelect("women's clothing")}
+            title="Women"
+          />
+          <Menu.Item onPress={() => onSelect('jewelery')} title="Jewellery" />
+          <Menu.Item
+            onPress={() => onSelect('electronics')}
+            title="Electronics"
+          />
         </Menu>
       </View>
     </View>
