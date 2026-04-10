@@ -7,7 +7,14 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import { fontsizes, Color } from '../styles/index.js';
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  spacing,
+  radius,
+  layout,
+} from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import { useNavigation } from '@react-navigation/native';
@@ -20,45 +27,51 @@ const SignUp = () => {
 
       <View>
         <View style={styles.inputContainer}>
-          <Icon name="user-alt" size={15} color="#626262" style={styles.icon} />
+          <Icon
+            name="user-alt"
+            size={15}
+            color={colors.textPlaceholder}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.input}
             placeholder="Username or Email"
-            placeholderTextColor="#626262"
+            placeholderTextColor={colors.textPlaceholder}
           />
         </View>
         <View style={styles.inputContainer}>
           <Iconuser
             name="locked"
             size={20}
-            color="#626262"
+            color={colors.textPlaceholder}
             style={styles.icon}
           />
           <TextInput
             style={styles.input}
-            placeholder="Enter username"
-            placeholderTextColor="#626262"
+            placeholder="Enter password"
+            placeholderTextColor={colors.textPlaceholder}
+            secureTextEntry
           />
         </View>
         <View style={styles.inputContainer}>
           <Iconuser
             name="locked"
             size={20}
-            color="#626262"
+            color={colors.textPlaceholder}
             style={styles.icon}
           />
           <TextInput
             style={styles.input}
-            placeholder="Enter username"
-            placeholderTextColor="#626262"
+            placeholder="Confirm password"
+            placeholderTextColor={colors.textPlaceholder}
+            secureTextEntry
           />
         </View>
-        
       </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttontitle}>Login</Text>
+          <Text style={styles.buttontitle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
 
@@ -84,12 +97,8 @@ const SignUp = () => {
 
       <View style={styles.Bottomcontainer}>
         <Text style={styles.textbottom}>
-          I already have an account
-          <TouchableOpacity
-            onPress={() => {
-              Navigation.navigate('Login');
-            }}
-          >
+          I already have an account{' '}
+          <TouchableOpacity onPress={() => Navigation.navigate('Login')}>
             <Text style={styles.signup}>Log in</Text>
           </TouchableOpacity>
         </Text>
@@ -101,15 +110,14 @@ const SignUp = () => {
 export default SignUp;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //justifyContent: 'center'
+  container: { 
+    flex: 1 
   },
   title: {
-    fontWeight: '700',
-    fontSize: fontsizes.l,
+    fontWeight: fontWeights.bold,
+    fontSize: fontSizes.screenTitle,
     top: 60,
-    left: 32,
+    left: spacing.authTitleLeft,
     width: 185,
     height: 83,
   },
@@ -118,86 +126,71 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#A8A8A9',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    height: 45,
-    width: 310,
-    marginLeft: 25,
-    backgroundColor: '#e4e4e4',
-    marginBottom: 20,
+    borderColor: colors.border,
+    borderRadius: radius.input,
+    paddingHorizontal: spacing.inputPaddingH,
+    height: layout.inputHeight,
+    width: layout.inputWidth,
+    marginLeft: spacing.inputMarginLeft,
+    backgroundColor: colors.backgroundInput,
+    marginBottom: spacing.inputMarginBottom,
   },
-  icon: {
-    marginRight: 20,
-  },
+  icon: { marginRight: spacing.iconMarginRight },
   input: {
     flex: 1,
     height: '100%',
-    padding: 0,
-    fontSize: 11,
+    padding: spacing.none,
+    fontSize: fontSizes.inputText,
   },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 110,
-  },
+  buttonContainer: { 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 110 },
   button: {
     borderWidth: 1,
-    borderRadius: 4,
-    backgroundColor: Color.buttoncolor,
-    borderColor: Color.buttoncolor,
-    //width:130,
-    height: 40,
-    width: 290,
+    borderRadius: radius.button,
+    backgroundColor: colors.primary,
+    borderColor: colors.primaryBorder,
+    height: layout.primaryButtonHeight,
+    width: layout.primaryButtonWidth,
   },
   buttontitle: {
-    padding: 8,
-    paddingLeft: 120,
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 15,
-  },
-  forgot: {
-    top: 80,
-    marginLeft: 245,
-  },
-  forgotText: {
-    color: Color.buttoncolor,
-    fontSize: 11,
+    padding: spacing.buttonPaddingV,
+    paddingLeft: spacing.buttonPaddingLeft,
+    color: colors.textOnPrimary,
+    fontWeight: fontWeights.semiBold,
+    fontSize: fontSizes.buttonPrimary,
   },
   ImageContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: spacing.lg,
     top: 170,
     paddingLeft: 93,
   },
   image: {
-    height: 45,
-    width: 45,
+    height: layout.socialIconSizeSmall,
+    width: layout.socialIconSizeSmall,
   },
   textcontainer: {
-    top: 155,
-    marginLeft: 115,
-  },
+     top: 155, 
+     marginLeft: 115 },
   text: {
-    color: '#575757',
-    fontWeight: '500',
-    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
-  Bottomcontainer: {
-    top: 200,
-    marginLeft: 105,
-  },
+  Bottomcontainer: { 
+    top: 200, 
+    marginLeft: 105 },
   textbottom: {
-    color: '#575757',
-    fontWeight: '500',
-    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
   signup: {
-    color: Color.buttoncolor,
+    color: colors.primary,
     textDecorationLine: 'underline',
-    fontWeight: '500',
-    fontSize: 12,
+    fontWeight: fontWeights.medium,
+    fontSize: fontSizes.label,
   },
 });

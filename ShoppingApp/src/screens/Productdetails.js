@@ -4,6 +4,7 @@ import { CartContext } from '../context/Context';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
+import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles';
 
 const ProductDetails = ({ route }) => {
   const { product } = route.params;
@@ -12,53 +13,46 @@ const ProductDetails = ({ route }) => {
 
   return (
     <View style={styles.container}>
+
+    {/* header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backBtn}
-        >
-          <Iconarrow name="chevron-thin-left" size={20} style={styles.icon} />
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <Iconarrow name="chevron-thin-left" size={20} style={styles.headerIcon} />
         </TouchableOpacity>
-
-        <TouchableOpacity >
-          <Icon name="cart-outline" size={22} style={styles.icon} />
+        <TouchableOpacity>
+          <Icon name="cart-outline" size={22} style={styles.headerIcon} />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.image}>
-        <Image
-          source={{ uri: product.image }}
-          style={styles.productImage}
-          resizeMode="contain"
-        />6-
-      </View>
-      <View style={styles.textcontainer}>
+      {/* image */}
+      <Image
+        source={{ uri: product.image }}
+        style={styles.productImage}
+        resizeMode="contain"
+      />
+
+      {/* product info */}
+      <View style={styles.infoContainer}>
         <Text style={styles.title}>{product.title}</Text>
         <Text style={styles.rating}>
           ⭐ {product.rating?.rate} ({product.rating?.count} reviews)
         </Text>
         <Text style={styles.price}>₹{product.price}</Text>
-        <Text style={styles.info}>Product Info</Text>
-        <Text numberOfLines={2} style={styles.desc}>
+        <Text style={styles.infoLabel}>Product Info</Text>
+        <Text numberOfLines={2} style={styles.description}>
           {product.description}
         </Text>
 
-        <View style={styles.cartButtonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => addToCart(product)}
-          >
-            <Icon
-              name="cart-outline"
-              size={20}
-              color="white"
-              style={styles.cartIcon}
-            />
-            <Text style={styles.buttonText}>Add to Cart</Text>
-          </TouchableOpacity>
-        </View>
-
+        {/* add to cart */}
+        <TouchableOpacity
+          style={styles.addToCartButton}
+          onPress={() => addToCart(product)}
+        >
+          <Icon name="cart-outline" size={20} color={colors.textOnPrimary} />
+          <Text style={styles.addToCartText}>Add to Cart</Text>
+        </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -68,72 +62,68 @@ export default ProductDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
-    margin: 5,
+    paddingTop: spacing.lg,
+    margin: spacing.sm,
   },
   header: {
     padding: 13,
-    //backgroundColor: '#fff',
     flexDirection: 'row',
     gap: 280,
   },
-  backText: {
-    fontSize: 20,
-    paddingLeft: 10,
-    fontWeight: '500',
+  headerIcon: {
+    color: colors.textPrimary,
   },
-  Image: {},
   productImage: {
     width: '97%',
-    height: 180,
-    // borderWidth: 1,
-    // borderRadius: 5,
-    marginLeft: 5,
+    height: layout.productDetailImageHeight,
+    marginLeft: spacing.sm,
     resizeMode: 'contain',
   },
-  textcontainer: {
+  infoContainer: {
     flex: 1,
-    gap: 5,
-    padding: 10,
+    gap: spacing.sm,
+    padding: spacing.cardPaddingInfo,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#000000',
+    fontSize: fontSizes['4xl'],
+    fontWeight: fontWeights.semiBold,
+    color: colors.textPrimary,
   },
   rating: {
-    color: '#828282',
-    fontSize: 14,
+    color: colors.textLight,
+    fontSize: fontSizes.lg,
   },
   price: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: fontSizes.lg,
+    fontWeight: fontWeights.medium,
+    color: colors.textPrimary,
+  },
+  infoLabel: {
+    fontSize: fontSizes.lg,
+    fontWeight: fontWeights.semiBold,
+    color: colors.textPrimary,
   },
   description: {
-    fontSize: 12,
-    color: '#000000',
+    fontSize: fontSizes.base,
+    color: colors.textPrimary,
   },
-
-  cartButtonContainer: {
-    marginTop:5,
-    height: 35, 
-    width: 130,
+  addToCartButton: {
+    marginTop: spacing.sm,
+    height: layout.addToCartButtonHeight,
+    width: layout.addToCartButtonWidth,
     borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: 10,
-    backgroundColor: '#3F92FF',
-    overflow: 'hidden', 
-  },
-  button: {
-    flex: 1,
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    borderColor: colors.backgroundPrimary,
+    borderRadius: radius.addToCart,
+    backgroundColor: colors.success,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: spacing.lg,
+    overflow: 'hidden',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
-    margin:5
+  addToCartText: {
+    color: colors.textOnPrimary,
+    fontSize: fontSizes.lg,
+    marginLeft: spacing.sm,
   },
 });

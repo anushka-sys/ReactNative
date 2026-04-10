@@ -111,7 +111,10 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: 
+  { 
+    flex: 1
+   },
   title: {
     fontWeight: fontWeights.bold,
     fontSize: fontSizes.screenTitle,
@@ -141,7 +144,10 @@ const styles = StyleSheet.create({
     padding: spacing.none,
     fontSize: fontSizes.inputText,
   },
-  buttonContainer: { justifyContent: 'center', alignItems: 'center', top: 150 },
+  buttonContainer: { 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 150 },
   button: {
     borderWidth: 1,
     borderRadius: radius.button,
@@ -157,8 +163,14 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semiBold,
     fontSize: fontSizes.buttonPrimary,
   },
-  forgot: { top: 80, marginLeft: 245 },
-  forgotText: { color: colors.primary, fontSize: fontSizes.sm },
+  forgot: { 
+    top: 80, 
+    marginLeft: 245 
+  },
+  forgotText: { 
+    color: colors.primary, 
+    fontSize: fontSizes.sm 
+  },
   ImageContainer: {
     flexDirection: 'row',
     gap: spacing.lg,
@@ -175,7 +187,10 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.medium,
     fontSize: fontSizes.label,
   },
-  Bottomcontainer: { top: 220, marginLeft: 115 },
+  Bottomcontainer: { 
+    top: 220, 
+    marginLeft: 115 
+  },
   textbottom: {
     color: colors.textSecondary,
     fontWeight: fontWeights.medium,
