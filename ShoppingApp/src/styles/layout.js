@@ -1,8 +1,7 @@
-// ─── Layout Design Tokens ─────────────────────────────────────────────────────
-// Reusable flex/alignment patterns and fixed dimension constants.
+
 
 export const layout = {
-  // ── Flex Helpers ──────────────────────────────────────────────────────────────
+
   row: {
     flexDirection: 'row',
   },
@@ -24,8 +23,7 @@ export const layout = {
     flex: 1,
   },
 
-  // ── Fixed Dimensions ──────────────────────────────────────────────────────────
-  // Buttons
+  
   primaryButtonWidth:   290,
   primaryButtonHeight:   40,
   largePrimaryButtonHeight: 50,
@@ -34,11 +32,11 @@ export const layout = {
   addToCartButtonWidth:  130,
   addToCartButtonHeight:  35,
 
-  // Inputs
+  
   inputHeight:  45,
   inputWidth:  310,
 
-  // Header / icons
+
   headerIconSize: 28,
   logoWidth:     110,
   logoHeight:     30,
@@ -49,17 +47,16 @@ export const layout = {
   cartProductImageHeight: 153,
   productDetailImageHeight: 180,
 
-  // Category icons (home screen)
+
   categoryIconSize: 50,
 
-  // Auth social icons
   socialIconSizeLarge: 55,
   socialIconSizeSmall: 45,
 
-  // Coupon image
+
   couponImageWidth:  31,
   couponImageHeight: 20,
 
-  // Tab bar
+
   tabBarHeight: 50,
 };
