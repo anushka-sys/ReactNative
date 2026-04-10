@@ -1,11 +1,8 @@
-// ─── Shadow / Elevation Design Tokens ────────────────────────────────────────
-// Android uses `elevation`; iOS uses the shadow* props.
-// Export ready-made shadow style objects to spread into StyleSheet entries.
 
 import { colors } from './colors';
 
 export const shadows = {
-  // ── Android Elevation Levels ──────────────────────────────────────────────
+ 
   elevation: {
     none: 0,
     sm:   2,   // product cards
@@ -13,8 +10,7 @@ export const shadows = {
     lg:   5,
   },
 
-  // ── Cross-platform Shadow Presets ─────────────────────────────────────────
-  // Spread these into your StyleSheet entry alongside `elevation`.
+  
 
   card: {
     elevation: 2,
