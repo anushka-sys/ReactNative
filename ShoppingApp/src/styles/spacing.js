@@ -39,4 +39,7 @@ export const spacing = {
   qtyBtnPaddingH:      8,  
   qtyBtnPaddingV:      2,  
   tabBarPaddingBottom: 5,  
+  login : 53,
+  gapb : 31,
+  loginp : 56,
 };

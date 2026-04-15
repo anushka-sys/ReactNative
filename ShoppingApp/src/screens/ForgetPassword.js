@@ -19,11 +19,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const ForgetPassword = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Forgot{'\n'}Password{'?'}
-      </Text>
 
-      <View>
+      {/* TITLE */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>
+          Forgot{'\n'}Password{'?'}
+        </Text>
+      </View>
+
+      {/* FORM */}
+      <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Icon
             name="mail"
@@ -40,20 +45,22 @@ const ForgetPassword = () => {
           />
         </View>
 
-        <View style={styles.forgot}>
+        <View style={styles.infoContainer}>
           <TouchableOpacity>
-            <Text style={styles.forgotText}>
+            <Text style={styles.infoText}>
               {'*'}We will send you a message to set or reset your new password
             </Text>
           </TouchableOpacity>
         </View>
       </View>
 
+      {/* BUTTON */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttontitle}>Submit</Text>
+          <Text style={styles.buttonTitle}>Submit</Text>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -61,66 +68,72 @@ const ForgetPassword = () => {
 export default ForgetPassword;
 
 const styles = StyleSheet.create({
-  container: 
-  { 
-    flex: 1 
+  container: {
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary,
+    paddingHorizontal: spacing.authTitleLeft,
+    paddingTop: spacing.login,
+  },
+
+  titleContainer: {
+    paddingBottom: spacing['7xl'],
   },
   title: {
-    fontWeight: fontWeights.bold,
     fontSize: fontSizes.screenTitle,
-    top: spacing.authTitleTop,
-    left: spacing.authTitleLeft,
-    width: 185,
-    height: 83,
+    fontWeight: fontWeights.bold,
+    color: colors.textPrimary,
   },
+
+  formContainer: {
+    gap: spacing.gapb,
+  },
+
   inputContainer: {
-    top: 100,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.backgroundMuted,
+    borderRadius: radius.input,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.input,
-    paddingHorizontal: spacing.inputPaddingH,
-    height: layout.inputHeight,
-    width: layout.inputWidth,
-    marginLeft: spacing.inputMarginLeft,
-    backgroundColor: colors.backgroundInput,
-    marginBottom: spacing.inputMarginBottom,
   },
-  icon: 
-  { 
-    marginRight: 
-    spacing.iconMarginRight 
+  icon: {
+    paddingLeft: spacing.paymentPadding,
+    paddingRight: spacing.inputPaddingH,
+    paddingVertical: spacing.screenPaddingTop,
   },
   input: {
     flex: 1,
-    height: '100%',
-    padding: spacing.none,
-    fontSize: fontSizes.inputText,
+    paddingVertical: spacing.screenPaddingTop,
+    paddingRight: spacing.paymentPadding,
+    fontSize: fontSizes.base,
+    color: colors.textPrimary,
   },
-  buttonContainer: { justifyContent: 'center', alignItems: 'center', top: 150 },
-  button: {
-    borderWidth: 1,
-    borderRadius: radius.button,
-    backgroundColor: colors.primary,
-    borderColor: colors.primaryBorder,
-    height: layout.primaryButtonHeight,
-    width: layout.primaryButtonWidth,
+
+  infoContainer: {
+    paddingTop: 0,
   },
-  buttontitle: {
-    padding: spacing.buttonPaddingV,
-    paddingLeft: spacing.buttonPaddingLeft,
-    color: colors.textOnPrimary,
-    fontWeight: fontWeights.semiBold,
-    fontSize: fontSizes.buttonPrimary,
-  },
-  forgot: {
-    top: 100,
-  },
-  forgotText: {
+  infoText: {
     color: colors.textSecondary,
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.regular,
-    paddingLeft: spacing.authTitleLeft,
+    fontSize: 12,
+    fontWeight:'400'
+  },
+
+  buttonContainer: {
+    paddingTop: spacing.authTitleLeft,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.button,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    alignItems: 'center',
+  },
+  buttonTitle: {
+    color: colors.textOnPrimary,
+    fontSize: fontSizes['2xl'],
+    fontWeight: '600',
+    textAlign: 'center',
+    paddingHorizontal: 109,
+    paddingVertical: 15,
   },
 });

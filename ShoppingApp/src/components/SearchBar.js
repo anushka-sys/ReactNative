@@ -1,22 +1,26 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 const SearchBar = ({ value, onChangeText }) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-        <Icon name="search" size={18} color="#BBBBBB" />
+        
+        <Icon name="search" size={20} color="#9CA3AF" />
 
         <TextInput
           placeholder="Search any Product.."
-          placeholderTextColor="#BBBBBB"
+          placeholderTextColor="#9CA3AF"
           style={styles.input}
           value={value}
           onChangeText={onChangeText}
         />
 
-        <Icon name="mic" size={16} color="#BBBBBB" />
+        <TouchableOpacity>
+          <Icon name="mic" size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -26,22 +30,26 @@ export default SearchBar;
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingHorizontal: 10,
-    marginTop: 10,
+    paddingHorizontal: 16,
+    paddingTop:16,
   },
+
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFF",
-    paddingHorizontal: 15,
     height: 40,
     borderRadius: 10,
-    elevation: 3,
+    backgroundColor: "#FFFFFF",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
+
   input: {
     flex: 1,
-    fontSize: 13,
-    marginLeft: 8,
+    marginLeft: 10,
+    fontSize: 14,
+    lineHeight: 20,
     color: "#000",
+    padding: 0, // removes Android extra padding
   },
 });

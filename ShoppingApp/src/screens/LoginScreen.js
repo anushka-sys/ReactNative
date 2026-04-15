@@ -1,109 +1,77 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
-import {
-  colors,
-  fontSizes,
-  fontWeights,
-  spacing,
-  radius,
-  layout,
-} from '../styles/index';
+import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
+import Icone from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const Navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome{'\n'}Back!</Text>
 
-      <View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Welcome{'\n'}Back!</Text>
+      </View>
+
+      <View style={styles.formContainer}>
+
         <View style={styles.inputContainer}>
-          <Icon name="user-alt" size={15} color="#626262" style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Username or Email"
-            placeholderTextColor="#626262"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Iconuser
-            name="locked"
-            size={20}
-            color="#626262"
-            style={styles.icon}
-          />
+          <Icon name="user-alt" size={20} color={colors.textPlaceholder} style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Enter username"
-            placeholderTextColor="#626262"
+            placeholderTextColor={colors.textPlaceholder}
           />
         </View>
-        <View style={styles.forgot}>
-          <TouchableOpacity style={styles.forgotcontainer}>
-            <Text
-              style={styles.forgotText}
-              onPress={() => {
-                Navigation.navigate('ForgetPassword');
-              }}
-            >
-              Forgot Password
-            </Text>
+
+        <View style={styles.inputContainer}>
+          <Iconuser name="locked" size={20} color={colors.textPlaceholder} style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter password"
+            placeholderTextColor={colors.textPlaceholder}
+            secureTextEntry
+          />
+          <Icone name="eye" size={20} color={colors.textPlaceholder} style={styles.icon}/>
+        </View>
+
+      </View>
+
+      <View style={styles.forgotContainer}>
+          <TouchableOpacity onPress={() => Navigation.navigate('ForgetPassword')}>
+            <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
-      </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            Navigation.navigate('GetStartedScreen');
-          }}
+          onPress={() => Navigation.navigate('GetStartedScreen')}
         >
-          <Text style={styles.buttontitle}>Login</Text>
+          <Text style={styles.buttonTitle}>Login</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.textcontainer}>
-        <Text style={styles.text}>
-          {'-'} OR Continue with {'-'}
-        </Text>
+      <View style={styles.dividerContainer}>
+        <Text style={styles.dividerText}>- OR Continue with -</Text>
       </View>
 
-      <View>
-        <TouchableOpacity style={styles.ImageContainer}>
-          <Image
-            source={require('../assets/Google.png')}
-            style={styles.image}
-          />
-          <Image source={require('../assets/Apple.png')} style={styles.image} />
-          <Image
-            source={require('../assets/Facebook.png')}
-            style={styles.image}
-          />
+      <View style={styles.socialContainer}>
+        <Image source={require('../assets/Google.png')} style={styles.socialImage} />
+        <Image source={require('../assets/Apple.png')} style={styles.socialImage} />
+        <Image source={require('../assets/Facebook.png')} style={styles.socialImage} />
+      </View>
+
+      <View style={styles.bottomContainer}>
+        <Text style={styles.bottomText}>Create An Account </Text>
+        <TouchableOpacity onPress={() => Navigation.navigate('SignUp')}>
+          <Text style={styles.signupText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.Bottomcontainer}>
-        <Text style={styles.textbottom}>
-          Create An Account
-          <TouchableOpacity
-            onPress={() => {
-              Navigation.navigate('SignUp');
-            }}
-          >
-            <Text style={styles.signup}> Sign Up</Text>
-          </TouchableOpacity>
-        </Text>
-      </View>
     </View>
   );
 };
@@ -111,95 +79,115 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: 
-  { 
-    flex: 1
-   },
+  container: {
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary,
+    paddingHorizontal: spacing.authTitleLeft,
+    paddingTop: spacing.login,
+  },
+
+  titleContainer: {
+    paddingBottom: spacing['7xl'], 
+  },
   title: {
-    fontWeight: fontWeights.bold,
     fontSize: fontSizes.screenTitle,
-    top: spacing.authTitleTop,
-    left: spacing.authTitleLeft,
-    width: 185,
-    height: 83,
+    fontWeight: fontWeights.bold,
+    color: colors.textPrimary,
+  },
+
+  formContainer: {
+   gap:spacing.gapb,
   },
   inputContainer: {
-    top: 100,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.backgroundMuted,
+    borderRadius: radius.input,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.input,
-    paddingHorizontal: spacing.inputPaddingH,
-    height: layout.inputHeight,
-    width: layout.inputWidth,
-    marginLeft: spacing.inputMarginLeft,
-    backgroundColor: colors.backgroundInput,
-    marginBottom: spacing.inputMarginBottom,
   },
-  icon: { marginRight: spacing.iconMarginRight },
+  icon: {
+    paddingLeft: spacing.paymentPadding, 
+    paddingRight: spacing.inputPaddingH, 
+    paddingVertical: spacing.screenPaddingTop, 
+  },
   input: {
     flex: 1,
-    height: '100%',
-    padding: spacing.none,
-    fontSize: fontSizes.inputText,
+    paddingVertical: spacing.screenPaddingTop, // 17 — drives input height
+    paddingRight: spacing.paymentPadding, // 16
+    fontSize: fontSizes.base,
+    color: colors.textPrimary,
   },
-  buttonContainer: { 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    top: 150 },
+
+  forgotContainer: {
+    alignItems: 'flex-end',
+    paddingTop: spacing.buttonPaddingV,
+    //paddingVertical: spacing.md, // 8
+  },
+  forgotText: {
+    color: colors.primary,
+    fontSize: fontSizes.sm,
+  },
+
+  buttonContainer: {
+    //alignItems: 'center',
+    paddingTop: spacing.authTitleLeft, 
+    
+  },
   button: {
-    borderWidth: 1,
-    borderRadius: radius.button,
     backgroundColor: colors.primary,
+    borderRadius: radius.button,
+    borderWidth: 1,
     borderColor: colors.primaryBorder,
-    height: layout.primaryButtonHeight,
-    width: layout.primaryButtonWidth,
+    // justifyContent: 'center',
+    alignItems: 'center',
   },
-  buttontitle: {
-    padding: spacing.buttonPaddingV,
-    paddingLeft: spacing.buttonPaddingLeft,
+  buttonTitle: {
     color: colors.textOnPrimary,
-    fontWeight: fontWeights.semiBold,
-    fontSize: fontSizes.buttonPrimary,
+    fontSize: fontSizes['2xl'],
+    fontWeight: '600',
+    textAlign: 'center', 
+    paddingHorizontal:109,
+    paddingVertical:15,
   },
-  forgot: { 
-    top: 80, 
-    marginLeft: 245 
+
+
+  dividerContainer: {
+    alignItems: 'center',
+    paddingTop: spacing.loginp, 
   },
-  forgotText: { 
-    color: colors.primary, 
-    fontSize: fontSizes.sm 
+  dividerText: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.label,
+    fontWeight: fontWeights.medium,
   },
-  ImageContainer: {
+
+  socialContainer: {
     flexDirection: 'row',
+    justifyContent: 'center', 
     gap: spacing.lg,
-    top: 200,
-    paddingLeft: 80,
+    paddingTop: spacing['5xl'], 
   },
-  image: {
+  socialImage: {
     height: layout.socialIconSizeLarge,
     width: layout.socialIconSizeLarge,
   },
-  textcontainer: { top: 175, marginLeft: 115 },
-  text: {
+
+  bottomContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    paddingTop: spacing['5xl'], 
+  },
+  bottomText: {
     color: colors.textSecondary,
-    fontWeight: fontWeights.medium,
     fontSize: fontSizes.label,
-  },
-  Bottomcontainer: { 
-    top: 220, 
-    marginLeft: 115 
-  },
-  textbottom: {
-    color: colors.textSecondary,
     fontWeight: fontWeights.medium,
-    fontSize: fontSizes.label,
   },
-  signup: {
+  signupText: {
     color: colors.primary,
-    textDecorationLine: 'underline',
-    fontWeight: fontWeights.medium,
     fontSize: fontSizes.label,
+    fontWeight: fontWeights.medium,
+    textDecorationLine: 'underline',
   },
 });

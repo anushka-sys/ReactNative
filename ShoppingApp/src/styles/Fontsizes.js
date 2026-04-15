@@ -9,7 +9,7 @@ export const fontSizes = {
   xl:   15,   
   '2xl': 16,  
   '3xl': 18,  
-  '4xl': 20,  
+  buttontext: 20,  
   '5xl': 34,  
   '6xl': 36,  
 
@@ -25,3 +25,5 @@ export const fontSizes = {
   label:         12,   
   caption:       12,   
 };
+
+
