@@ -1,23 +1,34 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AppHeader = () => {
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../assets/lines.png")}
-        style={styles.icon}
-      />
+    <View style={styles.headerWrapper}>
+      <View style={styles.container}>
 
-      <Image
-        source={require("../assets/logo.png")}
-        style={styles.logo}
-      />
+        
+        <TouchableOpacity style={styles.leftBtn}>
+          <Icon name="menu" size={24} color="#111" />
+        </TouchableOpacity>
 
-      <Image
-        source={require("../assets/profile.png")}
-        style={styles.icon}
-      />
+        
+        <View style={styles.logoWrapper}>
+          <Image
+            source={require("../assets/logo.png")}
+            style={styles.logo}
+          />
+        </View>
+
+        
+        <TouchableOpacity style={styles.rightBtn}>
+          <Image
+            source={require("../assets/profile.png")}
+            style={styles.profile}
+          />
+        </TouchableOpacity>
+
+      </View>
     </View>
   );
 };
@@ -25,21 +36,52 @@ const AppHeader = () => {
 export default AppHeader;
 
 const styles = StyleSheet.create({
+
+  
+  headerWrapper: {
+    paddingTop: 15,
+  },
+
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    height: 56,
+    justifyContent: "center",
+  },
+
+  
+  leftBtn: {
+    position: "absolute",
+    left: 16,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 10,
-    paddingTop:0,
   },
-  icon: {
-    width: 28,
-    height: 28,
-    resizeMode: "contain",
+
+  
+  rightBtn: {
+    position: "absolute",
+    right: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    overflow: "hidden",
   },
+
+  profile: {
+    width: "100%",
+    height: "100%",
+  },
+
+  
+  logoWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   logo: {
-    width: 110,
-    height: 30,
+    width: 112,
+    height: 31,
     resizeMode: "contain",
   },
+
 });
