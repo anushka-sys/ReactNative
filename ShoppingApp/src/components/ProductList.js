@@ -1,42 +1,57 @@
-import React from "react";
-import { View, Text, Image, FlatList, StyleSheet,TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { RefreshControl } from 'react-native';
 
-const ProductList = ({ products }) => {
-const navigation = useNavigation ();
+const ProductList = ({ products, refreshing, onRefresh }) => {
+  const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
-   <TouchableOpacity style={styles.productCard} 
-   onPress={() => navigation.navigate('ProductDetails', { product: item })}
-   >
-     <View>
-      <Image source={{ uri: item.image }} style={styles.productImage} />
+    <TouchableOpacity
+      style={styles.cardWrapper}
+      onPress={() => navigation.navigate('ProductDetails', { product: item })}
+    >
+      <View style={styles.productCard}>
+        <Image source={{ uri: item.image }} style={styles.productImage} />
 
-      <View style={styles.productInfo}>
-        <Text numberOfLines={1} style={styles.productTitle}>
-          {item.title}
-        </Text>
+        <View style={styles.productInfo}>
+          <Text numberOfLines={1} style={styles.productTitle}>
+            {item.title}
+          </Text>
 
-        <Text numberOfLines={2} style={styles.productDesc}>
-          {item.description}
-        </Text>
+          <Text numberOfLines={2} style={styles.productDesc}>
+            {item.description}
+          </Text>
 
-        <Text style={styles.productPrice}>₹ {item.price}</Text>
+          <Text style={styles.productPrice}>₹ {item.price}</Text>
 
-        <Text style={styles.productRating}>
-          ⭐ {item.rating?.rate} ({item.rating?.count})
-        </Text>
+          <Text style={styles.productRating}>
+            ⭐ {item.rating?.rate} ({item.rating?.count})
+          </Text>
+        </View>
       </View>
-    </View>
-   </TouchableOpacity>
+    </TouchableOpacity>
   );
 
   return (
     <FlatList
       data={products}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={item => item.id.toString()}
       numColumns={2}
       renderItem={renderItem}
+      contentContainerStyle={styles.listContent}
+      columnWrapperStyle={styles.row}
+      contentInset={{ bottom: 30 }}
+      //refresh controls
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     />
   );
 };
@@ -44,39 +59,60 @@ const navigation = useNavigation ();
 export default ProductList;
 
 const styles = StyleSheet.create({
+  listContent: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 30,
+  },
+  row: {
+    marginBottom: 16,
+  },
+  cardWrapper: {
+    flex: 1,
+    paddingHorizontal: 8,
+    maxWidth: '50%',
+  },
   productCard: {
-    width: "47%",
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderRadius: 12,
-    margin: 5,
-    overflow: "hidden",
-    elevation: 2,
-    paddingTop: 10,
+    overflow: 'hidden',
   },
   productImage: {
-    width: "100%",
-    height: 150,
-    resizeMode: "contain",
+    width: '100%',
+    height: 136,
+    resizeMode: 'contain',
   },
+
   productInfo: {
-    padding: 10,
+    paddingHorizontal: 8,
+    paddingTop: 8,
+    paddingBottom: 10,
   },
+
   productTitle: {
-    fontWeight: "bold",
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 20,
+    color: '#000',
   },
+
   productDesc: {
-    fontSize: 11,
-    color: "#666",
-    marginVertical: 4,
+    fontSize: 10,
+    lineHeight: 16,
+    color: '#6B7280',
+    marginTop: 4,
   },
+
   productPrice: {
-    fontWeight: "bold",
-    color: "#000",
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 4,
+    color: '#000',
   },
+
   productRating: {
     fontSize: 10,
-    color: "#AAA",
-    marginTop: 5,
+    marginTop: 4,
+    color: '#A4A9B3',
   },
 });
