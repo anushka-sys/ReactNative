@@ -6,7 +6,7 @@ import { CartContext } from '../context/Context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
-import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles';
+import { colors, fontSizes, fontWeights, spacing, radius, layout, Color } from '../styles';
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -15,6 +15,7 @@ const CartScreen = () => {
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
+    
   } = useContext(CartContext);
 
   let totalAmount = 0;
@@ -81,7 +82,7 @@ const CartScreen = () => {
 
         <View style={styles.row}>
           <Text style={styles.rowLabel}>Order Amounts</Text>
-          <Text style={styles.rowValue}>₹ {totalAmount.toFixed(0)}</Text>
+          <Text style={styles.rowValue}>₹ {totalAmount.toFixed(2)}</Text>
         </View>
 
         <View style={styles.row}>
@@ -93,7 +94,7 @@ const CartScreen = () => {
 
         <View style={styles.row}>
           <Text style={styles.totalLabel}>Order Total</Text>
-          <Text style={styles.totalValue}>₹ {totalAmount.toFixed(0)}</Text>
+          <Text style={styles.totalValue}>₹ {totalAmount.toFixed(2)}</Text>
         </View>
 
       </View>
@@ -102,10 +103,15 @@ const CartScreen = () => {
 
   
     <View style={styles.checkoutBar}>
-      <TouchableOpacity style={styles.checkoutButton}>
-        <Text style={styles.checkoutButtonTxt}>Proceed to Payment</Text>
-      </TouchableOpacity>
-    </View>
+  <View>
+    <Text style={styles.bottomPrice}>₹ {totalAmount.toFixed(2)}</Text>
+    <Text style={styles.viewDetails}>View Details</Text>
+  </View>
+
+  <TouchableOpacity style={styles.checkoutButton}>
+    <Text style={styles.checkoutButtonTxt}>Proceed to Payment</Text>
+  </TouchableOpacity>
+</View>
 
   </View>
 );
@@ -126,8 +132,6 @@ const styles = StyleSheet.create({
   back: {
     paddingTop: spacing.sm,
   },
-
-
   card: {
     flexDirection: 'row',
     backgroundColor: colors.backgroundPrimary,
@@ -277,25 +281,42 @@ scrollContent: {
 checkoutBar: {
   position: 'absolute',
   bottom: 0,
-  left: 100,
+  left: 0,
   right: 0,
-  //backgroundColor: colors.backgroundPrimary,
-  padding: spacing.lg,
+  height: 80,
+  backgroundColor: colors.backgroundPrimary,
   borderTopWidth: 1,
-  borderColor: colors.borderLight,
+  borderColor: '#E5E7EB',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  paddingHorizontal: 16,
+},
+
+bottomPrice: {
+  fontSize: 16,
+  fontWeight: '700',
+  color: '#000',
+},
+
+viewDetails: {
+  fontSize: 12,
+  color: Color.primary,
+  marginTop: 4,
 },
 
 checkoutButton: {
-  backgroundColor: colors.primary,
-  height: 45,
-  borderRadius: radius.cartButton,
+  width: 219,
+  height: 48,
+  borderRadius: 5,
+  backgroundColor: Color.primary,
   alignItems: 'center',
   justifyContent: 'center',
 },
 
 checkoutButtonTxt: {
-  color: colors.textOnPrimary,
-  fontWeight: fontWeights.bold,
-  fontSize: fontSizes.xl,
+  color: '#FFF',
+  fontSize: 16,
+  fontWeight: '600',
 },
 });
