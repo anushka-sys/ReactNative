@@ -1,38 +1,73 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState ,useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const CartContext = createContext(); //creates actual conttext object
+export const CartContext = createContext(); //creates actual context object(global data container)
+
+const CART_STORAGE_KEY = 'cart_items'; 
 
 const Context = ({ children }) => {
   const [cartItems, setCartItems] = useState([]); //array holding all items inside cart
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Add Item
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id);
-    if (existingItem) {
-      const updatedCart = cartItems.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setCartItems(updatedCart);
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+useEffect(() => {
+  const loadCart = async () => {
+    try {
+      const stored = await AsyncStorage.getItem(CART_STORAGE_KEY);
+      if (stored !== null) {
+        setCartItems(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoaded(true); 
     }
   };
+  loadCart();
+}, []);
 
+// save effect only runs after initial load is done
+useEffect(() => {
+  if (!isLoaded) return; 
+  const saveCart = async () => {
+    try {
+      await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  saveCart();
+}, [cartItems, isLoaded]);
+
+
+
+  // Add Item
   // const addToCart = (product) => {
-  // const item = cartItems.find((i) => i.id === product.id);
+  //   const existingItem = cartItems.find((item) => item.id === product.id);
+  //   if (existingItem) {
+  //     const updatedCart = cartItems.map((item) =>
+  //       item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+  //     );
+  //     setCartItems(updatedCart);
+  //   } else {
+  //     setCartItems([...cartItems, { ...product, quantity: 1 }]);
+  //   }
+  // };
 
-  // if (item) {
-  //   item.quantity = item.quantity + 1;
-  //   setCartItems([...cartItems]);
-  // } else {
-  //   product.quantity = 1;
-  //   setCartItems([...cartItems, product]);
-  // }
-//};
+  const addToCart = (product) => {
+  const item = cartItems.find((i) => i.id === product.id);
+
+  if (item) {                           //checks if item exists
+    item.quantity = item.quantity + 1;
+    setCartItems([...cartItems]);
+  } else {
+    product.quantity = 1;
+    setCartItems([...cartItems, product]);
+  }
+};
 
   // Remove Item
   const removeFromCart = (productId) => {
-    const filtered = cartItems.filter(item => item.id !== productId);
+    const filtered = cartItems.filter(item => item.id !== productId); //if ids dont match keep
     setCartItems(filtered);
   };
 
@@ -75,14 +110,7 @@ const Context = ({ children }) => {
     setCartItems([]);
   };
 
-  // Total Price
-  const getTotalPrice = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
-
+  
   return (
     <CartContext.Provider
       value={{
@@ -92,7 +120,7 @@ const Context = ({ children }) => {
         increaseQuantity,
         decreaseQuantity,
         clearCart,
-        getTotalPrice,
+        
       }}
     >
       {children}
