@@ -35,10 +35,14 @@ const GetStartedScreen = () => {
       >
         <View style={styles.textContainer}>
           <Text style={styles.title}>
-            You want{'\n'}Authentic, here{'\n'}you go!
+            You want Authentic, here{'\n'}you go!
           </Text>
           <Text style={styles.subtitle}>Find it here, buy it now!</Text>
-          <TouchableOpacity
+         
+        </View>
+
+        <View style={styles.textContainer}>
+           <TouchableOpacity
             style={styles.button}
             onPress={() => Navigation.navigate('MainTabs')}
           >
@@ -66,14 +70,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   gradient: {
-    flex: 1,
+    //flex: 1,
     justifyContent: 'flex-end',
+    position:'absolute',
+    bottom:0,
+    left:0,
+    right:0,
+    height:362,
+    justifyContent:'flex-end',
   },
   textContainer: {
     alignItems: 'center',
     paddingHorizontal: spacing.authTitleLeft,
-    paddingBottom: spacing['7xl'],
-    gap: spacing['5xl'],
+    paddingBottom: 34,
+    
   },
   title: {
     color: colors.textOnPrimary,
@@ -87,20 +97,27 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.regular,
     textAlign: 'center',
+    paddingTop:14,
   },
   button: {
     backgroundColor: colors.primary,
     borderRadius: radius.button,
     borderWidth: 1,
     borderColor: colors.primaryBorder,
-    alignItems: 'center',
-    alignSelf: 'stretch',
+    //alignItems: 'center',
+    //alignSelf: 'stretch',
+    paddingVertical:13,
+   paddingHorizontal:71.5,
+    // paddingLeft:71,
+    // paddingTop:13,
+    // paddingBottom:13,
+    // paddingRight:71,
   },
   buttonTitle: {
     color: colors.textOnPrimary,
     fontSize: fontSizes.buttonLarge,
     fontWeight: fontWeights.semiBold,
-    paddingVertical: 15,
-    textAlign: 'center',
+   // paddingVertical: 15,
+   // textAlign: 'center',
   },
 });
