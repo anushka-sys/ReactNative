@@ -1,14 +1,30 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { Lucide } from '@react-native-vector-icons/lucide';
+import React, { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/Feather';
+import IconFA from 'react-native-vector-icons/FontAwesome';
 import { Menu } from 'react-native-paper';
 
-const Filter = ({ onSelectCategory }) => {
+
+const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
   const [visible, setVisible] = useState(false);
+  const [sortVisible, setSortVisible] = useState(false);
+
+  //  resetkey
+  useEffect(() => {
+    if (resetKey > 0) {
+      onSelectCategory('All');
+      onSelectSort(null);
+    }
+  }, [resetKey]);
+
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  
+  const openSortMenu = () => setSortVisible(true);
+  const closeSortMenu = () => setSortVisible(false);
 
+  
   const onSelect = category => {
     onSelectCategory(category);
     closeMenu();
@@ -19,32 +35,40 @@ const Filter = ({ onSelectCategory }) => {
       <Text style={styles.sectionTitle}>All Featured</Text>
 
       <View style={styles.filterButtons}>
-        <TouchableOpacity style={styles.chip}>
-          <Text>Sort</Text>
-          <Lucide name="arrow-down-up" size={15} color="#000" />
-        </TouchableOpacity>
+        <Menu
+          visible={sortVisible}
+          onDismiss={closeSortMenu}
+          anchor={
+            <TouchableOpacity style={styles.sortChip} onPress={openSortMenu}>
+              <Text style={styles.chipText}>Sort</Text>
+              <IconFA
+                name="exchange"
+                size={14}
+                color="#000"
+                style={{ transform: [{ rotate: '90deg' }] }}
+              />
+            </TouchableOpacity>
+          }
+        >
+          <Menu.Item onPress={() => { onSelectSort('low'); closeSortMenu(); }} title="Price: Low to High" />
+          <Menu.Item onPress={() => { onSelectSort('high'); closeSortMenu(); }} title="Price: High to Low" />
+        </Menu>
 
         <Menu
           visible={visible}
           onDismiss={closeMenu}
           anchor={
-            <TouchableOpacity style={styles.chip} onPress={openMenu}>
-              <Text>Filter</Text>
-              <Lucide name="filter" size={15} color="#000" />
+            <TouchableOpacity style={styles.filterChip} onPress={openMenu}>
+              <Text style={styles.chipText}>Filter</Text>
+              <Icon name="filter" size={14} color="#000" />
             </TouchableOpacity>
           }
         >
           <Menu.Item onPress={() => onSelect('All')} title="All" />
           <Menu.Item onPress={() => onSelect("men's clothing")} title="Mens" />
-          <Menu.Item
-            onPress={() => onSelect("women's clothing")}
-            title="Women"
-          />
+          <Menu.Item onPress={() => onSelect("women's clothing")} title="Women" />
           <Menu.Item onPress={() => onSelect('jewelery')} title="Jewellery" />
-          <Menu.Item
-            onPress={() => onSelect('electronics')}
-            title="Electronics"
-          />
+          <Menu.Item onPress={() => onSelect('electronics')} title="Electronics" />
         </Menu>
       </View>
     </View>
@@ -56,28 +80,49 @@ export default Filter;
 const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 5,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '700',
+    color: '#000',
   },
   filterButtons: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
-  chip: {
-    backgroundColor: '#FFF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    marginLeft: 8,
+  chipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#000',
+  },
+  sortChip: {
+    height: 24,
+    paddingVertical: 4,
+    paddingLeft: 8,
+    paddingRight: 8,
+    borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#EEE',
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFF',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 4,
+  },
+  filterChip: {
+    height: 24,
+    paddingVertical: 4,
+    paddingLeft: 12,
+    paddingRight: 18,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });
