@@ -12,7 +12,7 @@ const Context = ({ children }) => {
 useEffect(() => {
   const loadCart = async () => {
     try {
-      const stored = await AsyncStorage.getItem(CART_STORAGE_KEY);
+      const stored = await AsyncStorage.getItem(CART_STORAGE_KEY);//getitems from storage
       if (stored !== null) {
         setCartItems(JSON.parse(stored));
       }
@@ -27,7 +27,7 @@ useEffect(() => {
 
 // save effect only runs after initial load is done
 useEffect(() => {
-  if (!isLoaded) return; 
+  if (!isLoaded) return; //
   const saveCart = async () => {
     try {
       await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
@@ -41,18 +41,6 @@ useEffect(() => {
 
 
   // Add Item
-  // const addToCart = (product) => {
-  //   const existingItem = cartItems.find((item) => item.id === product.id);
-  //   if (existingItem) {
-  //     const updatedCart = cartItems.map((item) =>
-  //       item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-  //     );
-  //     setCartItems(updatedCart);
-  //   } else {
-  //     setCartItems([...cartItems, { ...product, quantity: 1 }]);
-  //   }
-  // };
-
   const addToCart = (product) => {
   const item = cartItems.find((i) => i.id === product.id);
 
@@ -61,7 +49,7 @@ useEffect(() => {
     setCartItems([...cartItems]);
   } else {
     product.quantity = 1;
-    setCartItems([...cartItems, product]);
+    setCartItems([...cartItems, product]); 
   }
 };
 
@@ -72,8 +60,8 @@ useEffect(() => {
   };
 
   // Increase Quantity
-  const increaseQuantity = (productId) => {
-    const updated = cartItems.map(item =>
+  const increaseQuantity = (productId) => { 
+    const updated = cartItems.map(item => 
       item.id === productId
         ? { ...item, quantity: item.quantity + 1 }
         : item
@@ -117,7 +105,7 @@ useEffect(() => {
         cartItems,
         addToCart,
         removeFromCart,
-        increaseQuantity,
+        increaseQuantity, //actions
         decreaseQuantity,
         clearCart,
         
