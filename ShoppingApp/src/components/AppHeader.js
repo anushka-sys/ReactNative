@@ -1,18 +1,17 @@
 import React from "react";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { colors, fontSizes, layout,spacing } from '../styles';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AppHeader = () => {
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.container}>
-
         
         <TouchableOpacity style={styles.leftBtn}>
           <Icon name="menu" size={24} color="#111" />
         </TouchableOpacity>
 
-        
         <View style={styles.logoWrapper}>
           <Image
             source={require("../assets/logo.png")}
@@ -20,7 +19,6 @@ const AppHeader = () => {
           />
         </View>
 
-        
         <TouchableOpacity style={styles.rightBtn}>
           <Image
             source={require("../assets/profile.png")}
@@ -36,34 +34,31 @@ const AppHeader = () => {
 export default AppHeader;
 
 const styles = StyleSheet.create({
-
   
   headerWrapper: {
-    paddingTop: 15,
+    paddingTop: spacing.couponGap,
   },
 
   container: {
-    height: 56,
+    height: spacing.loginp,
     justifyContent: "center",
   },
-
   
   leftBtn: {
     position: "absolute",
-    left: 16,
-    width: 40,
-    height: 40,
+    left: spacing['4xl'],
+    width: spacing.apph,
+    height: spacing.apph,
     justifyContent: "center",
     alignItems: "center",
   },
-
   
   rightBtn: {
     position: "absolute",
-    right: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 100,
+    right: spacing['4xl'],
+    width: spacing.apph,
+    height: spacing.apph,
+    //borderRadius: 100,
     overflow: "hidden",
   },
 
@@ -71,7 +66,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-
   
   logoWrapper: {
     alignItems: "center",
@@ -79,8 +73,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 112,
-    height: 31,
+    width: layout.header,
+    height: spacing.gapb,
     resizeMode: "contain",
   },
 

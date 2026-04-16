@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import { Menu } from 'react-native-paper';
+import { spacing,fontSizes } from '../styles';
 
 
 const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
@@ -82,11 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: spacing['4xl'],
+    paddingTop: spacing['4xl'],
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: fontSizes['3xl'],
     fontWeight: '700',
     color: '#000',
   },
