@@ -1,22 +1,30 @@
 import React, { useContext } from 'react';
 import {
-  View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
 } from 'react-native';
 import { CartContext } from '../context/Context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
-import { colors, fontSizes, fontWeights, spacing, radius, layout, Color } from '../styles';
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  spacing,
+  radius,
+  layout,
+  Color,
+} from '../styles';
 
 const CartScreen = () => {
   const navigation = useNavigation();
-  const {
-    cartItems,
-    removeFromCart,
-    increaseQuantity,
-    decreaseQuantity,
-    
-  } = useContext(CartContext);
+  const { cartItems, removeFromCart, increaseQuantity, decreaseQuantity } =
+    useContext(CartContext);
 
   let totalAmount = 0;
   cartItems.forEach(item => {
@@ -24,97 +32,110 @@ const CartScreen = () => {
   });
 
   return (
-  <View style={styles.container}>
-    
-    <ScrollView 
-      style={{ flex: 1 }}
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
-
-      {/* header */}
-      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
-        <Iconarrow name="chevron-thin-left" size={20} color={colors.iconMuted} style={styles.back} />
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={() => navigation.goBack()}
+      >
+        <Iconarrow
+          name="chevron-thin-left"
+          size={20}
+          color={colors.iconMuted}
+          style={styles.back}
+        />
       </TouchableOpacity>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+       
 
-      {/* product cards */}
-      {cartItems.map(item => (
-        <View style={styles.card} key={item.id}>
-          <Image source={{ uri: item.image }} style={styles.image} />
+        {/* product cards */}
+        {cartItems.map(item => (
+          <View style={styles.card} key={item.id}>
+            <Image source={{ uri: item.image }} style={styles.image} />
 
-          <View style={styles.details}>
-            <Text numberOfLines={1} style={styles.title}>{item.title}</Text>
-            <Text numberOfLines={2} style={styles.subtitle}>{item.description}</Text>
-            <Text style={styles.subtitle}>{item.category}</Text>
-            <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
+            <View style={styles.details}>
+              <Text numberOfLines={1} style={styles.title}>
+                {item.title}
+              </Text>
+              <Text numberOfLines={2} style={styles.subtitle}>
+                {item.description}
+              </Text>
+              <Text style={styles.subtitle}>{item.category}</Text>
+              <Text style={styles.subtitle}>⭐ {item.rating.rate}</Text>
 
-            <View style={styles.qtyRow}>
-              <Text style={styles.qtyLabel}>Qty</Text>
+              <View style={styles.qtyRow}>
+                <Text style={styles.qtyLabel}>Qty</Text>
 
-              <View style={styles.qtySelector}>
-                <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
-                  <Text style={styles.qtyBtn}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.qtyText}>{item.quantity}</Text>
-                <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
-                  <Text style={styles.qtyBtn}>+</Text>
+                <View style={styles.qtySelector}>
+                  <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
+                    <Text style={styles.qtyBtn}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qtyText}>{item.quantity}</Text>
+                  <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
+                    <Text style={styles.qtyBtn}>+</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                  <Icon
+                    name="delete"
+                    size={20}
+                    color={colors.danger}
+                    style={styles.deleteIcon}
+                  />
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                <Icon name="delete" size={20} color={colors.danger} style={styles.deleteIcon} />
-              </TouchableOpacity>
             </View>
           </View>
-        </View>
-      ))}
+        ))}
 
-      {/* coupon */}
-      <View style={styles.coupon}>
-        <Image source={require('../assets/coupon.png')} style={styles.couponImg} />
-        <Text style={styles.couponTxt}>Apply Coupons</Text>
-        <Text style={styles.couponLink}>Select</Text>
+        {/* coupon */}
+        <View style={styles.coupon}>
+          <Image
+            source={require('../assets/coupon.png')}
+            style={styles.couponImg}
+          />
+          <Text style={styles.couponTxt}>Apply Coupons</Text>
+          <Text style={styles.couponLink}>Select</Text>
+        </View>
+
+        {/* oder details */}
+        <View style={styles.paymentCard}>
+          <Text style={styles.paymentTitle}>Order Payment Details</Text>
+
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Order Amounts</Text>
+            <Text style={styles.rowValue}>₹ {totalAmount.toFixed(2)}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Delivery Fee</Text>
+            <Text style={styles.freeText}>Free</Text>
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.row}>
+            <Text style={styles.totalLabel}>Order Total</Text>
+            <Text style={styles.totalValue}>₹ {totalAmount.toFixed(2)}</Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.checkoutBar}>
+        <View>
+          <Text style={styles.bottomPrice}>₹ {totalAmount.toFixed(2)}</Text>
+          <Text style={styles.viewDetails}>View Details</Text>
+        </View>
+
+        <TouchableOpacity style={styles.checkoutButton}>
+          <Text style={styles.checkoutButtonTxt}>Proceed to Payment</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* oder details */}
-      <View style={styles.paymentCard}>
-        <Text style={styles.paymentTitle}>Order Payment Details</Text>
-
-        <View style={styles.row}>
-          <Text style={styles.rowLabel}>Order Amounts</Text>
-          <Text style={styles.rowValue}>₹ {totalAmount.toFixed(2)}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.rowLabel}>Delivery Fee</Text>
-          <Text style={styles.freeText}>Free</Text>
-        </View>
-
-        <View style={styles.divider} />
-
-        <View style={styles.row}>
-          <Text style={styles.totalLabel}>Order Total</Text>
-          <Text style={styles.totalValue}>₹ {totalAmount.toFixed(2)}</Text>
-        </View>
-
-      </View>
-
-    </ScrollView>
-
-  
-    <View style={styles.checkoutBar}>
-  <View>
-    <Text style={styles.bottomPrice}>₹ {totalAmount.toFixed(2)}</Text>
-    <Text style={styles.viewDetails}>View Details</Text>
-  </View>
-
-  <TouchableOpacity style={styles.checkoutButton}>
-    <Text style={styles.checkoutButtonTxt}>Proceed to Payment</Text>
-  </TouchableOpacity>
-</View>
-
-  </View>
-);
+    </View>
+  );
 };
 
 export default CartScreen;
@@ -188,7 +209,6 @@ const styles = StyleSheet.create({
     padding: spacing.iconPadding,
     marginLeft: 55,
   },
-
 
   coupon: {
     marginTop: spacing.lg,
@@ -274,49 +294,49 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     marginLeft: 130,
   },
-scrollContent: {
-  paddingBottom: 120, 
-},
+  scrollContent: {
+    paddingBottom: 120,
+  },
 
-checkoutBar: {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: 80,
-  backgroundColor: colors.backgroundPrimary,
-  borderTopWidth: 1,
-  borderColor: '#E5E7EB',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: 16,
-},
+  checkoutBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    backgroundColor: colors.backgroundPrimary,
+    borderTopWidth: 1,
+    borderColor: '#E5E7EB',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
 
-bottomPrice: {
-  fontSize: 16,
-  fontWeight: '700',
-  color: '#000',
-},
+  bottomPrice: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+  },
 
-viewDetails: {
-  fontSize: 12,
-  color: Color.primary,
-  marginTop: 4,
-},
+  viewDetails: {
+    fontSize: 12,
+    color: Color.primary,
+    marginTop: 4,
+  },
 
-checkoutButton: {
-  width: 219,
-  height: 48,
-  borderRadius: 5,
-  backgroundColor: Color.primary,
-  alignItems: 'center',
-  justifyContent: 'center',
-},
+  checkoutButton: {
+    width: 219,
+    height: 48,
+    borderRadius: 5,
+    backgroundColor: Color.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-checkoutButtonTxt: {
-  color: '#FFF',
-  fontSize: 16,
-  fontWeight: '600',
-},
+  checkoutButtonTxt: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });

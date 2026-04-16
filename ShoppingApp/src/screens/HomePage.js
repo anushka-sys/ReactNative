@@ -5,7 +5,7 @@ import AppHeader from '../components/AppHeader';
 import SearchBar from '../components/SearchBar';
 import ProductList from '../components/ProductList';
 import Filter from '../components/Filter';
-import { colors, layout,spacing } from '../styles';
+import { colors, fontSizes, layout,spacing,fontWeights } from '../styles';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -40,6 +40,7 @@ const HomePage = () => {
     filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
   }
 
+
   const loadProducts = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
@@ -51,6 +52,7 @@ const HomePage = () => {
     else setLoading(false);
   };
 
+
   //refresh 
   const handleRefresh = () => {
     setSearchText('');
@@ -60,16 +62,21 @@ const HomePage = () => {
     loadProducts(true);
   };
 
+
   useEffect(() => {
     loadProducts();
   }, []);
 
+
   return (
     <View style={styles.container}>
+      {/* header */}
+
       <AppHeader />
 
       <SearchBar value={searchText} onChangeText={setSearchText} />
 
+    {/* filter */}
       <Filter
         onSelectCategory={setSelectedCategory}
         onSelectSort={setSortOrder}
@@ -101,18 +108,19 @@ const HomePage = () => {
 
         <TouchableOpacity
           style={styles.categoryItem}
-          onPress={() => setSelectedCategory("men's clothing")}
+          onPress={() => setSelectedCategory('electronics')}
         >
           <Image
             source={require('../assets/kids.png')}
             style={styles.categoryIcon}
+            
           />
-          <Text style={styles.categoryText}>Kids</Text>
+          <Text style={styles.categoryText}>Electronic</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.categoryItem}
-          onPress={() => setSelectedCategory('jewelery')}
+          onPress={() => setSelectedCategory("men's clothing")}
         >
           <Image
             source={require('../assets/mens.png')}
@@ -123,7 +131,7 @@ const HomePage = () => {
 
         <TouchableOpacity
           style={styles.categoryItem}
-          onPress={() => setSelectedCategory('electronics')}
+          onPress={() => setSelectedCategory("women's clothing")}
         >
           <Image
             source={require('../assets/woemns.png')}
@@ -132,6 +140,8 @@ const HomePage = () => {
           <Text style={styles.categoryText}>Womens</Text>
         </TouchableOpacity>
       </View>
+
+      {/* flatlist */}
       <ProductList
         products={filteredProducts}
         refreshing={refreshing}
@@ -148,16 +158,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.backgroundSecondary,
   },
-
-  appHeader: {
-    //paddingTop:44,
-  },
   categoryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 16,
-    paddingLeft: 8,
+    paddingTop: spacing['4xl'],
+    paddingLeft: spacing.md,
   },
   categoryIcon: {
     height: layout.categoryIconSize,
@@ -168,9 +174,9 @@ const styles = StyleSheet.create({
   },
 
   categoryText: {
-    marginTop: 4,
-    fontSize: 12,
-    fontWeight: '600',
+    marginTop: spacing.xs,
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.semiBold,
     color: colors.textPrimary,
   },
 });
