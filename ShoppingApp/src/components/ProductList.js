@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { RefreshControl } from 'react-native';
+import { spacing } from '../styles';
 
 const ProductList = ({ products, refreshing, onRefresh }) => {
   const navigation = useNavigation();
@@ -60,12 +60,12 @@ export default ProductList;
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 30,
+   paddingHorizontal: spacing['4xl'],
+    paddingTop: spacing['4xl'],
+    paddingBottom: spacing['7xl'],
   },
   row: {
-    marginBottom: 16,
+    paddingBottom: spacing['4xl'],
   },
   cardWrapper: {
     flex: 1,

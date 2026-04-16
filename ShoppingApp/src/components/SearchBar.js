@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
 
   container: {
     height: 40,
-    borderRadius: 10,
     backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
@@ -50,6 +49,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: "#000",
-    padding: 0, // removes Android extra padding
+    padding: 0, 
   },
 });
