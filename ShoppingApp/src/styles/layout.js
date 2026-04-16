@@ -29,7 +29,7 @@ export const layout = {
   cartCheckoutButtonHeight:  48,
   addToCartButtonWidth:  130,
   addToCartButtonHeight:  35,
-
+space :280,
   
   inputHeight:  45,
   inputWidth:  310,
@@ -55,6 +55,6 @@ export const layout = {
   couponImageWidth:  31,
   couponImageHeight: 20,
 
-
+header:112,
   tabBarHeight: 50,
 };

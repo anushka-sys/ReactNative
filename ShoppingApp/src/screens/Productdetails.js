@@ -39,7 +39,7 @@ const ProductDetails = ({ route }) => {
         </Text>
         <Text style={styles.price}>₹{product.price}</Text>
         <Text style={styles.infoLabel}>Product Info</Text>
-        <Text numberOfLines={2} style={styles.description}>
+        <Text numberOfLines={3} style={styles.description}>
           {product.description}
         </Text>
 
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
     margin: spacing.sm,
   },
   header: {
-    padding: 13,
+    padding: spacing.cardSpacing,
     flexDirection: 'row',
-    gap: 280,
+    gap: layout.space,
   },
   headerIcon: {
     color: colors.textPrimary,
