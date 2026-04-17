@@ -9,11 +9,33 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { spacing } from '../styles';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ProductList = ({ products, refreshing, onRefresh }) => {
   const navigation = useNavigation();
+ 
+    const renderStars = (rating) => {
+    const stars = [];
+    const filledStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    
+    for (let i = 0; i < 5; i++) {
+      if (i < filledStars) {
+        stars.push(<Icon key={i} name="star" size={12} color="#FFD700" />);
+      } else if (i === filledStars && hasHalfStar) {
+        
+        stars.push(<Icon key={i} name="star-half" size={12} color="#FFD700" />);
+      } else {
+        
+        stars.push(<Icon key={i} name="star-outline" size={12} color="#FFD700" />);
+      }
+    }
+    return stars;
+  };
+
 
   const renderItem = ({ item }) => (
+    
     <TouchableOpacity
       style={styles.cardWrapper}
       onPress={() => navigation.navigate('ProductDetails', { product: item })}
@@ -32,9 +54,15 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
 
           <Text style={styles.productPrice}>₹ {item.price}</Text>
 
-          <Text style={styles.productRating}>
+          {/* <Text style={styles.productRating}>
             ⭐ {item.rating?.rate} ({item.rating?.count})
-          </Text>
+          </Text> */}
+           <View style={styles.ratingContainer}>
+            <View style={styles.starsWrapper}>
+              {renderStars(item.rating?.rate || 0)}
+            </View>
+            <Text style={styles.ratingCount}> ({item.rating?.count || 0})</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -110,9 +138,17 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 
-  productRating: {
-    fontSize: 10,
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 4,
+  },
+  starsWrapper: {
+    flexDirection: 'row',
+  },
+  ratingCount: {
+    fontSize: 10,
     color: '#A4A9B3',
+    marginLeft: 4,
   },
 });
