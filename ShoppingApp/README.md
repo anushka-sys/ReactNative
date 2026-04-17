@@ -95,3 +95,165 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+
+
+Good. Now we connect everything into one full movie from start → finish.
+No pieces missing.
+We’ll follow one cart item through its entire life cycle.
+The Big Picture
+You built a persistence loop:
+Storage ⇄ React State
+
+Two effects create this loop:
+Load from storage when app starts
+Save to storage whenever cart changes
+
+Now let’s run the movie.
+SCENE 1 — First time ever opening the app
+User installs and opens app for the first time.
+What React state looks like at first render
+
+JavaScript
+cartItems = []
+isLoaded = false
+
+Because React always starts fresh.
+It has zero memory of previous sessions.
+SCENE 2 — Load effect runs (getItem)
+This effect runs once on startup:
+JavaScript
+const stored = await AsyncStorage.getItem(CART_STORAGE_KEY);
+What getItem() actually does
+Think of AsyncStorage like a small phone database:
+Key
+Value
+CART_STORAGE_KEY
+"[{id:1,name:'Shoes'}]"
+Important truth: AsyncStorage can store ONLY STRINGS.
+So it returns either:
+"some JSON string"
+or null (nothing saved yet)
+First time app ever opens
+Storage is empty → returns:
+JavaScript
+stored = null
+So this block does nothing:
+JavaScript
+if (stored !== null) {
+   setCartItems(JSON.parse(stored))
+}
+Then:
+JavaScript
+setIsLoaded(true)
+Meaning: "Okay, storage check finished."
+Now app is ready.
+SCENE 3 — User adds item to cart
+User taps Add to cart
+This happens somewhere:
+JavaScript
+setCartItems(prev => [...prev, newItem])
+React state becomes:
+JavaScript
+cartItems = [Shoes]
+React re-renders UI → cart shows item.
+
+SCENE 4 — Save effect runs (setItem)
+Because cartItems changed, this effect triggers:
+JavaScript
+await AsyncStorage.setItem(
+  CART_STORAGE_KEY,
+  JSON.stringify(cartItems)
+);
+What happens inside setItem
+Step 1 — Convert JS → string
+JavaScript
+[ {id:1,name:'Shoes'} ]
+↓
+"[{\"id\":1,\"name\":\"Shoes\"}]"
+
+Step 2 — Store on phone
+Storage now contains:
+Key
+Value
+CART_STORAGE_KEY
+"[Shoes]"
+Now the cart is permanently saved.
+User closes app.
+React memory dies. Storage survives.
+
+SCENE 5 — Next day user opens app again
+App starts fresh again.
+React state resets:
+JavaScript
+cartItems = []
+isLoaded = false
+But AsyncStorage still contains:
+JavaScript
+"[Shoes]"
+
+SCENE 6 — Save effect tries to run (blocked)
+On startup, all effects run once.
+Save effect tries to run, but:
+JavaScript
+if (!isLoaded) return;
+Saving is BLOCKED.
+This prevents overwriting storage with empty cart.
+This moment is the entire reason isLoaded exists.
+
+SCENE 7 — Load effect runs again
+Now we read storage:
+JavaScript
+stored = await AsyncStorage.getItem(key)
+This time it returns:
+JavaScript
+stored = "[{\"id\":1,\"name\":\"Shoes\"}]"
+Now this line runs:
+JavaScript
+setCartItems(JSON.parse(stored))
+String → real JS array.
+React state becomes:
+JavaScript
+cartItems = [Shoes]
+Then:
+JavaScript
+setIsLoaded(true)
+App is now hydrated (restored).
+UI shows cart instantly.
+SCENE 8 — Save effect runs safely
+Because isLoaded just became true, save effect runs once.
+It saves the same correct cart again.
+Now both storage and state are synced.
+From now on (normal app usage)
+Whenever user:
+adds item
+removes item
+clears cart
+This happens automatically:
+React state changes → Save effect runs → Storage updated.
+Loop continues forever.
+The Loop Diagram (burn this into memory)
+
+APP START
+   ↓
+React state = empty
+   ↓
+Load effect → getItem()
+   ↓
+State restored from storage
+   ↓
+isLoaded = true
+   ↓
+User changes cart
+   ↓
+Save effect → setItem()
+   ↓
+Storage updated
+   ↓
+User closes app
+   ↓
+Repeat forever
+Final blunt truth
+AsyncStorage is the memory of the app.
+React state is the temporary working memory.
+Your two effects continuously copy data between them so the app never forgets the user’s cart.

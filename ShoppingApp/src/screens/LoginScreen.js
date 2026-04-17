@@ -1,17 +1,23 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React,{ useContext } from 'react';
 import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
+import {ThemeContext} from '../context/ThemeContext';
 
 const LoginScreen = () => {
   const Navigation = useNavigation();
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
-
+      {/* <TouchableOpacity onPress={toggleTheme}>
+  <Text>Toggle Theme</Text>
+</TouchableOpacity> */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Welcome{'\n'}Back!</Text>
       </View>
@@ -76,12 +82,11 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
     paddingHorizontal: spacing.authTitleLeft,
     paddingTop: spacing.login,
   },
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes.screenTitle,
     fontWeight: fontWeights.bold,
-    color: colors.textPrimary,
+    color: theme.textPrimary,
   },
 
   formContainer: {
@@ -191,3 +196,5 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
+export default LoginScreen;
+
