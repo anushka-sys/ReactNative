@@ -61,6 +61,7 @@ const HomePage = () => {
     setResetKey(prev => prev + 1); // tells Filter to reset itself
     loadProducts(true);
   };
+  
 
 
   useEffect(() => {
