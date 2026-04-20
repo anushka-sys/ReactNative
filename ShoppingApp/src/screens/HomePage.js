@@ -6,6 +6,8 @@ import SearchBar from '../components/SearchBar';
 import ProductList from '../components/ProductList';
 import Filter from '../components/Filter';
 import { colors, fontSizes, layout,spacing,fontWeights } from '../styles';
+import {ThemeContext} from '../context/ThemeContext';
+import React,{ useContext } from 'react';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +17,10 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+
+   const { theme } = useContext(ThemeContext);
+
+   const styles = getStyles(theme);
 
   let filteredProducts = products;
 //search text
@@ -61,7 +67,6 @@ const HomePage = () => {
     setResetKey(prev => prev + 1); // tells Filter to reset itself
     loadProducts(true);
   };
-  
 
 
   useEffect(() => {
@@ -151,13 +156,13 @@ const HomePage = () => {
     </View>
   );
 };
-
+ 
 export default HomePage;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: theme.backgroundPrimary,
   },
   categoryRow: {
     flexDirection: 'row',
