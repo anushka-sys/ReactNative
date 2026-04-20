@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const ProductList = ({ products, refreshing, onRefresh }) => {
   const navigation = useNavigation();
- 
+   
     const renderStars = (rating) => {
     const stars = [];
     const filledStars = Math.floor(rating);
