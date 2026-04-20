@@ -15,9 +15,9 @@ const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity onPress={toggleTheme}>
+      <TouchableOpacity onPress={toggleTheme}>
   <Text>Toggle Theme</Text>
-</TouchableOpacity> */}
+</TouchableOpacity>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Welcome{'\n'}Back!</Text>
       </View>
@@ -106,7 +106,7 @@ const getStyles = (theme) => StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.backgroundMuted,
+    backgroundColor: theme.backgroundMuted,
     borderRadius: radius.input,
     borderWidth: 1,
     borderColor: colors.border,
