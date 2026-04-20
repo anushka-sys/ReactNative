@@ -7,7 +7,7 @@ import ForgetPassword from '../screens/ForgetPassword';
 import GetStartedScreen from '../screens/GetStartedScreen';
 import TabNavigator from './TabNavigator';
 import ProductDetails from '../screens/ProductDetails'
-// import DrawerNavigator from './DrawerNavigator'
+import DrawerNavigator from './DrawerNavigator'
 
 const Stack = createNativeStackNavigator();
 

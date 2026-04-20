@@ -17,6 +17,7 @@ const darkTheme = {
 const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
   const toggleTheme = () => setIsDark(prev => !prev);
+  
   const theme = isDark ? darkTheme : lightTheme;
 
   return (
