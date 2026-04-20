@@ -4,7 +4,6 @@ export const colors = {
   primary: '#F83758',          
   primaryBorder: '#F83758',    
 
-  
   backgroundPrimary: '#FFFFFF',    
   backgroundSecondary: '#F2F2F2', 
   backgroundInput: '#e4e4e4',     

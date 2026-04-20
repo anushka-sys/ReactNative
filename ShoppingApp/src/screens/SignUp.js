@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React,{ useContext } from 'react';
 import {
   colors,
   fontSizes,
@@ -19,9 +19,14 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
+import {ThemeContext} from '../context/ThemeContext';
+
 
 const SignUp = () => {
   const Navigation = useNavigation();
+   const { theme } = useContext(ThemeContext);
+
+   const styles = getStyles(theme);
   return (
  <View style={styles.container}>
  
@@ -97,10 +102,10 @@ const SignUp = () => {
   
 export default SignUp;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
     paddingHorizontal: spacing.authTitleLeft,
     paddingTop: spacing.login,
   },
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes.screenTitle,
     fontWeight: fontWeights.bold,
-    color: colors.textPrimary,
+    color: theme.textPrimary,
   },
 
   formContainer: {
@@ -120,7 +125,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.backgroundMuted,
+    backgroundColor: theme.backgroundPrimary,
     borderRadius: radius.input,
     borderWidth: 1,
     borderColor: colors.border,
@@ -176,7 +181,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing.loginp, 
   },
   dividerText: {
-    color: colors.textSecondary,
+    color: theme.textPrimary,
     fontSize: fontSizes.label,
     fontWeight: fontWeights.medium,
   },
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
     paddingTop: 10, 
   },
   bottomText: {
-    color: colors.textSecondary,
+    color: theme.textPrimary,
     fontSize: fontSizes.label,
     fontWeight: fontWeights.medium,
   },
