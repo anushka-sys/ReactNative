@@ -12,6 +12,7 @@ const darkTheme = {
   backgroundPrimary: '#121212',
   backgroundMuted: '#1e1e1e',
   textPrimary: '#ffffff',
+  textSecondary:'#cecece',
 };
 
 const ThemeProvider = ({ children }) => {
