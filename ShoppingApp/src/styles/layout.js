@@ -27,8 +27,8 @@ export const layout = {
   largePrimaryButtonHeight: 50,
   cartCheckoutButtonWidth:  219,
   cartCheckoutButtonHeight:  48,
-  addToCartButtonWidth:  130,
-  addToCartButtonHeight:  35,
+  addToCartButtonWidth:  149,
+  addToCartButtonHeight:  40,
 space :280,
   
   inputHeight:  45,

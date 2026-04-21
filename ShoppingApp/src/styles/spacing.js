@@ -22,7 +22,7 @@ export const spacing = {
   sectionPaddingH:    20,  
   cardPadding:        14,  
   cardPaddingTop:     10, 
-  cardPaddingInfo:    10,  
+  cardPaddingInfo:    15,  
   cardMargin:          5,  
   cardSpacing:        14,  
   inputPaddingH:      10,  
