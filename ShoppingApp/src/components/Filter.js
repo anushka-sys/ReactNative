@@ -1,14 +1,18 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import { Menu } from 'react-native-paper';
 import { spacing,fontSizes } from '../styles';
-
+import {ThemeContext} from '../context/ThemeContext';
 
 const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
   const [visible, setVisible] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
+
+     const { theme } = useContext(ThemeContext);
+  
+     const styles = getStyles(theme);
 
   //  resetkey
   useEffect(() => {
@@ -45,8 +49,8 @@ const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
               <IconFA
                 name="exchange"
                 size={14}
-                color="#000"
-                style={{ transform: [{ rotate: '90deg' }] }}
+                
+                style={styles.exchange}
               />
             </TouchableOpacity>
           }
@@ -61,7 +65,7 @@ const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
           anchor={
             <TouchableOpacity style={styles.filterChip} onPress={openMenu}>
               <Text style={styles.chipText}>Filter</Text>
-              <Icon name="filter" size={14} color="#000" />
+              <Icon name="filter" size={14}  style={styles.filter}/>
             </TouchableOpacity>
           }
         >
@@ -78,7 +82,7 @@ const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
 
 export default Filter;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: fontSizes['3xl'],
     fontWeight: '700',
-    color: '#000',
+    color: theme.textPrimary,
   },
   filterButtons: {
     flexDirection: 'row',
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#000',
+    color: theme.textPrimary,
   },
   sortChip: {
     height: 24,
@@ -107,8 +111,8 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#FFF',
+    borderColor: "#E5E7EB",
+    backgroundColor: theme.backgroundMuted,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -121,9 +125,16 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    backgroundColor: '#FFF',
+    backgroundColor: theme.backgroundMuted,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
+  filter:{
+    color:theme.textPrimary,
+  },
+  exchange:{
+     transform: [{ rotate: '90deg' }] ,
+     color:theme.textPrimary,
+  }
 });
