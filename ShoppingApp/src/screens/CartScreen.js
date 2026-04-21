@@ -11,21 +11,16 @@ import { CartContext } from '../context/Context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
-import {
-  colors,
-  fontSizes,
-  fontWeights,
-  spacing,
-  radius,
-  layout,
-  Color,
-} from '../styles';
+import {colors,fontSizes,fontWeights, spacing,radius,layout, Color,} from '../styles';
+import { ThemeContext } from '../context/ThemeContext';
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const { cartItems, removeFromCart, increaseQuantity, decreaseQuantity } =
     useContext(CartContext);
-
+   const { theme } = useContext(ThemeContext);
+   const styles = getStyles(theme);
+                    
   let totalAmount = 0;
   cartItems.forEach(item => {
     totalAmount += item.price * item.quantity;
@@ -40,7 +35,7 @@ const CartScreen = () => {
         <Iconarrow
           name="chevron-thin-left"
           size={20}
-          color={colors.iconMuted}
+          color={theme.textPrimary}
           style={styles.back}
         />
       </TouchableOpacity>
@@ -69,7 +64,9 @@ const CartScreen = () => {
                 <Text style={styles.qtyLabel}>Qty</Text>
 
                 <View style={styles.qtySelector}>
-                  <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
+                  <TouchableOpacity onPress={() => decreaseQuantity(item.id)} 
+                  disabled={item.quantity === 1}
+                    >
                     <Text style={styles.qtyBtn}>-</Text>
                   </TouchableOpacity>
                   <Text style={styles.qtyText}>{item.quantity}</Text>
@@ -101,7 +98,7 @@ const CartScreen = () => {
           <Text style={styles.couponLink}>Select</Text>
         </View>
 
-        {/* oder details */}
+        {/* order details */}
         <View style={styles.paymentCard}>
           <Text style={styles.paymentTitle}>Order Payment Details</Text>
 
@@ -140,22 +137,22 @@ const CartScreen = () => {
 
 export default CartScreen;
 
-const styles = StyleSheet.create({
+const getStyles = theme => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: theme.backgroundPrimary,
   },
   header: {
     fontWeight: fontWeights.bold,
     padding: spacing['3xl'],
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
   },
   back: {
     paddingTop: spacing.sm,
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundMuted,
     padding: spacing.cardPadding,
     marginTop: spacing.lg,
   },
@@ -172,11 +169,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.bold,
+    color:theme.textPrimary,
   },
   subtitle: {
     color: colors.textMuted,
     marginTop: spacing.xxs,
     fontSize: fontSizes.md,
+    color:theme.textSecondary,
   },
 
   qtyRow: {
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
   },
   qtyLabel: {
     marginRight: spacing.md,
-    color: colors.textMuted,
+    color: theme.textPrimary,
   },
   qtySelector: {
     flexDirection: 'row',
@@ -200,10 +199,13 @@ const styles = StyleSheet.create({
   qtyBtn: {
     fontSize: fontSizes['3xl'],
     paddingHorizontal: spacing.qtyBtnPaddingH,
+    color:theme.textPrimary,
   },
   qtyText: {
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.semiBold,
+    color:theme.textPrimary,
+
   },
   deleteIcon: {
     padding: spacing.iconPadding,
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
 
   coupon: {
     marginTop: spacing.lg,
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
     padding: spacing.xs + spacing.xxs,
     paddingLeft: spacing.couponPaddingLeft,
     flexDirection: 'row',
@@ -224,6 +226,7 @@ const styles = StyleSheet.create({
   },
   couponTxt: {
     fontSize: fontSizes.xl,
+    color:theme.textPrimary,
   },
   couponLink: {
     color: colors.primary,
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
   },
 
   paymentCard: {
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
     marginTop: spacing.cardSpacing,
     padding: spacing.paymentPadding,
   },
@@ -241,6 +244,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.bold,
     marginBottom: spacing.xl,
+    color:theme.textPrimary
   },
   row: {
     flexDirection: 'row',
@@ -248,10 +252,11 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xs + spacing.xxs,
   },
   rowLabel: {
-    color: colors.textPrimary,
+    color: theme.textPrimary,
   },
   rowValue: {
     fontWeight: fontWeights.semiBold,
+    color: theme.textPrimary,
   },
   freeText: {
     color: colors.free,
@@ -264,10 +269,12 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.bold,
+    color:theme.textPrimary,
   },
   totalValue: {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.bold,
+    color:theme.textPrimary,
   },
   emiContainer: {
     flexDirection: 'row',
@@ -304,7 +311,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 80,
-    backgroundColor: colors.backgroundPrimary,
+    backgroundColor: theme.backgroundPrimary,
     borderTopWidth: 1,
     borderColor: '#E5E7EB',
     flexDirection: 'row',
@@ -316,7 +323,7 @@ const styles = StyleSheet.create({
   bottomPrice: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000',
+    color: theme.textPrimary,
   },
 
   viewDetails: {

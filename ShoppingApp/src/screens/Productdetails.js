@@ -4,23 +4,49 @@ import { CartContext } from '../context/Context';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Iconarrow from 'react-native-vector-icons/Entypo';
-import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles';
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  spacing,
+  radius,
+  layout,
+} from '../styles';
+import { ThemeContext } from '../context/ThemeContext';
 
 const ProductDetails = ({ route }) => {
   const { product } = route.params;
   const navigation = useNavigation();
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, cartItems, removeFromCart } = useContext(CartContext);
+  const { theme } = useContext(ThemeContext);
+  const styles = getStyles(theme);
+
+  const isInCart = cartItems.some(item => item.id === product.id);
+
+  const handleCartPress = () => {
+    if (isInCart) {
+      removeFromCart(product.id);
+    } else {
+      addToCart(product);
+    }
+  };
 
   return (
     <View style={styles.container}>
-
-    {/* header */}
+      {/* header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Iconarrow name="chevron-thin-left" size={20} style={styles.headerIcon} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backBtn}
+        >
+          <Iconarrow
+            name="chevron-thin-left"
+            size={20}
+            style={styles.headerIcon}
+          />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="cart-outline" size={22} style={styles.headerIcon} />
+        <TouchableOpacity >
+          <Icon name="cart-outline" size={25} style={styles.headerIcon} />
         </TouchableOpacity>
       </View>
 
@@ -45,85 +71,111 @@ const ProductDetails = ({ route }) => {
 
         {/* add to cart */}
         <TouchableOpacity
-          style={styles.addToCartButton}
-          onPress={() => addToCart(product)}
+          style={[
+            styles.addToCartButton,
+            { backgroundColor: isInCart ? '#ff3b30' : colors.success },
+          ]}
+          onPress={handleCartPress}
         >
-          <Icon name="cart-outline" size={20} color={colors.textOnPrimary} />
-          <Text style={styles.addToCartText}>Add to Cart</Text>
+          <Icon
+            name={isInCart ? 'trash-outline' : 'cart-outline'}
+            size={20}
+            color={colors.textOnPrimary}
+          />
+          <Text style={styles.addToCartText}>
+            {isInCart ? 'Remove from Cart' : 'Add to Cart'}
+          </Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
 
 export default ProductDetails;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: spacing.lg,
-    margin: spacing.sm,
-  },
-  header: {
-    padding: spacing.cardSpacing,
-    flexDirection: 'row',
-    gap: layout.space,
-  },
-  headerIcon: {
-    color: colors.textPrimary,
-  },
-  productImage: {
-    width: '97%',
-    height: layout.productDetailImageHeight,
-    marginLeft: spacing.sm,
-    resizeMode: 'contain',
-  },
-  infoContainer: {
-    flex: 1,
-    gap: spacing.sm,
-    padding: spacing.cardPaddingInfo,
-  },
-  title: {
-    fontSize: fontSizes['4xl'],
-    fontWeight: fontWeights.semiBold,
-    color: colors.textPrimary,
-  },
-  rating: {
-    color: colors.textLight,
-    fontSize: fontSizes.lg,
-  },
-  price: {
-    fontSize: fontSizes.lg,
-    fontWeight: fontWeights.medium,
-    color: colors.textPrimary,
-  },
-  infoLabel: {
-    fontSize: fontSizes.lg,
-    fontWeight: fontWeights.semiBold,
-    color: colors.textPrimary,
-  },
-  description: {
-    fontSize: fontSizes.base,
-    color: colors.textPrimary,
-  },
-  addToCartButton: {
-    marginTop: spacing.sm,
-    height: layout.addToCartButtonHeight,
-    width: layout.addToCartButtonWidth,
-    borderWidth: 1,
-    borderColor: colors.backgroundPrimary,
-    borderRadius: radius.addToCart,
-    backgroundColor: colors.success,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    overflow: 'hidden',
-  },
-  addToCartText: {
-    color: colors.textOnPrimary,
-    fontSize: fontSizes.lg,
-    marginLeft: spacing.sm,
-  },
-});
+const getStyles = theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.backgroundPrimary,
+    },
+    header: {
+      padding: spacing.cardSpacing,
+      flexDirection: 'row',
+      gap: layout.space,
+      paddingTop: 20,
+    },
+    headerIcon: {
+      color: theme.textPrimary,
+    },
+    productImage: {
+      width: '97%',
+      height: layout.productDetailImageHeight,
+      marginLeft: spacing.sm,
+      resizeMode: 'contain',
+    },
+    infoContainer: {
+      flex: 1,
+      gap: spacing.sm,
+      padding: spacing.cardPaddingInfo,
+    },
+    title: {
+      fontSize: fontSizes['4xl'],
+      fontWeight: fontWeights.semiBold,
+      color: theme.textPrimary,
+    },
+    rating: {
+      color: colors.textLight,
+      fontSize: fontSizes.lg,
+    },
+    price: {
+      fontSize: fontSizes.lg,
+      fontWeight: fontWeights.medium,
+      color: theme.textPrimary,
+    },
+    infoLabel: {
+      fontSize: fontSizes.lg,
+      fontWeight: fontWeights.semiBold,
+      color: theme.textPrimary,
+    },
+    description: {
+      fontSize: fontSizes.base,
+      color: theme.textPrimary,
+    },
+    addToCartButton: {
+      marginTop: spacing.sm,
+      height: layout.addToCartButtonHeight,
+      width: layout.addToCartButtonWidth,
+      borderWidth: 1,
+      borderColor: colors.backgroundPrimary,
+      borderRadius: radius.addToCart,
+      backgroundColor: colors.success,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: spacing.lg,
+      overflow: 'hidden',
+    },
+    addToCartText: {
+      color: colors.textOnPrimary,
+      fontSize: fontSizes.lg,
+      marginLeft: spacing.sm,
+    },
+  });
+
+//   <TouchableOpacity
+//   style={[
+//     styles.addToCartButton,
+//     { backgroundColor: isInCart ? '#ff3b30' : colors.success }
+//   ]}
+//   onPress={handleCartPress}
+// >
+//   <Icon
+//     name={isInCart ? "trash-outline" : "cart-outline"}
+//     size={20}
+//     color={colors.textOnPrimary}
+//   />
+//   <Text style={styles.addToCartText}>
+//     {isInCart ? "Remove from Cart" : "Add to Cart"}
+//   </Text>
+// </TouchableOpacity>

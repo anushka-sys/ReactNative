@@ -1,8 +1,13 @@
-import React from "react";
+import React,{useContext} from "react";
 import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import {ThemeContext} from '../context/ThemeContext';
 
 const SearchBar = ({ value, onChangeText }) => {
+      const { theme } = useContext(ThemeContext);
+    
+       const styles = getStyles(theme);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
@@ -28,7 +33,7 @@ const SearchBar = ({ value, onChangeText }) => {
 
 export default SearchBar;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   wrapper: {
     paddingHorizontal: 16,
     paddingTop:16,
@@ -36,7 +41,7 @@ const styles = StyleSheet.create({
 
   container: {
     height: 40,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.backgroundPrimary,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,

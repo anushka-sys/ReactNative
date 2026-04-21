@@ -84,12 +84,19 @@ useEffect(() => {
   const decreaseQuantity = (productId) => {
     const updated = cartItems
       .map(item =>
-        item.id === productId
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
+      {
+        if(item.id === productId){
+          if(item.quantity === 1) return item;
+          return{...item,quantity:item.quantity - 1}
+        }
+        return item;
+      }
+        // item.id === productId
+        //   ? { ...item, quantity: item.quantity - 1 }
+        //   : item
       )
-      .filter(item => item.quantity > 0); // remove if 0
-
+      // .filter(item => item.quantity > 0); // remove if 0
+      
     setCartItems(updated);
   };
 

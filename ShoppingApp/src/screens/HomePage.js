@@ -183,6 +183,6 @@ const getStyles = (theme) => StyleSheet.create({
     marginTop: spacing.xs,
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semiBold,
-    color: colors.textPrimary,
+    color: theme.textPrimary,
   },
 });
