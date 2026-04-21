@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { spacing } from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {ThemeContext} from '../context/ThemeContext';
 
 const ProductList = ({ products, refreshing, onRefresh }) => {
   const navigation = useNavigation();
+
+  const { theme } = useContext(ThemeContext);
+    
+       const styles = getStyles(theme);
    
     const renderStars = (rating) => {
     const stars = [];
@@ -86,7 +91,7 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
 
 export default ProductList;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   listContent: {
    paddingHorizontal: spacing['4xl'],
     paddingTop: spacing['4xl'],
@@ -101,7 +106,7 @@ const styles = StyleSheet.create({
     maxWidth: '50%',
   },
   productCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: theme.backgroundMuted,
     borderRadius: 12,
     overflow: 'hidden',
   },
@@ -121,7 +126,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 20,
-    color: '#000',
+    color: theme.textPrimary
   },
 
   productDesc: {
@@ -135,7 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 4,
-    color: '#000',
+    color: theme.textPrimary,
   },
 
   ratingContainer: {
