@@ -2,13 +2,16 @@ import React from "react";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { colors, fontSizes, layout,spacing } from '../styles';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { DrawerActions } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 
 const AppHeader = () => {
+  const Navigation = useNavigation();
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.container}>
         
-        <TouchableOpacity style={styles.leftBtn}>
+        <TouchableOpacity style={styles.leftBtn}onPress={()=>Navigation.openDrawer()}>
           <Icon name="menu" size={24} color="#111" />
         </TouchableOpacity>
 
