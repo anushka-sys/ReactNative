@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
   Avatar,
@@ -14,8 +14,10 @@ import Icone from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawer = props => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+
+  const [dark, setDark] = useState(false);
   //const styles = getStyles(theme);
-  const isDarkTheme = theme === 'dark';
+ const isDarkTheme = theme === 'dark';
 
   return (
     <View style={{ flex: 1 }}>
@@ -66,7 +68,8 @@ const CustomDrawer = props => {
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
 
-              <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+              <Switch value={dark} onValueChange={()=>{setDark(!dark);isDarkTheme()}}/>
+
             </View>
           </TouchableRipple>
         </Drawer.Section>
