@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
   Avatar,
@@ -9,9 +9,14 @@ import {
   Switch,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-//import Icone from 'react-native-vector-icons/Ionicons';
+import { ThemeContext } from '../context/ThemeContext';
+import Icone from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawer = props => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  //const styles = getStyles(theme);
+  const isDarkTheme = theme === 'dark';
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -26,7 +31,8 @@ const CustomDrawer = props => {
               <Text style={styles.id}>id@app</Text>
             </View>
           </View>
-          <Drawer.Section style={styles.drawerSection}> </Drawer.Section>
+
+          {/* <Drawer.Section style={styles.drawerSection} > </Drawer.Section> */}
           <View>
             <DrawerItem
               icon={({ color, size }) => (
@@ -35,7 +41,7 @@ const CustomDrawer = props => {
               label="Home"
               onPress={() => {}}
             />
-             <DrawerItem
+            <DrawerItem
               icon={({ color, size }) => (
                 <Icon name="heart" color={color} size={size} />
               )}
@@ -44,14 +50,29 @@ const CustomDrawer = props => {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="chatbox-ellipses-outline" color={color} size={size} />
+                <Icone
+                  name="chatbox-ellipses-outline"
+                  color={color}
+                  size={size}
+                />
               )}
               label="Help Center"
               onPress={() => {}}
             />
           </View>
         </View>
+        <Drawer.Section title="Prefrences">
+          <TouchableRipple>
+            <View style={styles.preference}>
+              <Text>Dark Theme</Text>
+
+              <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+            </View>
+          </TouchableRipple>
+        </Drawer.Section>
       </DrawerContentScrollView>
+
+      <View style={styles.divider} />
       <Drawer.Section style={styles.bottomDrawerSection}>
         <DrawerItem
           icon={({ color, size }) => (
@@ -101,6 +122,7 @@ const styles = StyleSheet.create({
   },
   bottomDrawerSection: {
     marginBottom: 15,
+    //paddingTop:10,
     borderTopColor: '#f4f4f4',
     borderTopWidth: 1,
   },
@@ -121,5 +143,11 @@ const styles = StyleSheet.create({
   id: {
     fontSize: 14,
     color: 'grey',
+  },
+  divider: {
+    height: 1,
+    marginHorizontal: 15,
+    marginBottom: 5,
+    borderTopColor: '#f4f4f4',
   },
 });
