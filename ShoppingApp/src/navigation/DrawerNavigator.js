@@ -1,20 +1,20 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
-// import CustomDrawer from './CustomDrawer';
+import CustomDrawer from './CustomDrawer';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
-      // drawerContent={(props) => <CustomDrawer {...props} />}
+      drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,
         drawerPosition: 'left',
       }}
     >
-      <Drawer.Screen name="Home" component={TabNavigator} />
+      <Drawer.Screen name="MainApp" component={TabNavigator} />
     </Drawer.Navigator>
   );
 };

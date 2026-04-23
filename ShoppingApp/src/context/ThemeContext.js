@@ -6,6 +6,7 @@ const lightTheme = {
   backgroundPrimary: '#ffffff',
   backgroundMuted: '#f5f5f5',
   textPrimary: '#000000',
+  textSecondary:'#787878',
 };
 
 const darkTheme = {
@@ -17,6 +18,7 @@ const darkTheme = {
 
 const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
+  
   const toggleTheme = () => setIsDark(prev => !prev);
   
   const theme = isDark ? darkTheme : lightTheme;

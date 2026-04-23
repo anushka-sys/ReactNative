@@ -39,7 +39,6 @@ useEffect(() => {
 }, [cartItems, isLoaded]);
 
 
-
   // Add Item
   const addToCart = (product) => {
   const item = cartItems.find((i) => i.id === product.id);

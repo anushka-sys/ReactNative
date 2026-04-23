@@ -1,94 +1,163 @@
+import { StyleSheet, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
-  StyleSheet,
+  Avatar,
+  Drawer,
   Text,
-  View,
-  Button,
-  Modal,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import React, { useState } from 'react';
+  TouchableRipple,
+  Switch,
+} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import { ThemeContext } from '../context/ThemeContext';
+import Icone from 'react-native-vector-icons/Ionicons';
 
-const ModalPopup = ({ visible, children, onClose }) => {
-  return (
-    <Modal transparent visible={visible} animationType="fade">
-      <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={onClose} style={styles.close}>
-              <Icon name="x" size={20} color={'#000'} />
-            </TouchableOpacity>
-          </View>
-          {children}
-        </View>
-      </View>
-    </Modal>
-  );
-};
-
-const ProfileScreen = () => {
-  const [visible, setVisible] = useState(false);
+const CustomDrawer = props => {
+  const { isDark, toggleTheme ,theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
-      <ModalPopup visible={visible} onClose={() => setVisible(false)}>
-        <View style={{ alignItems: 'center' }}>
-          <Image
-            source={require('../assets/circle.png')}
-            style={styles.image}
-          />
-          <Image
-            source={require('../assets/tick.png')}
-            style={styles.tick}
-          />
-        </View>
-      </ModalPopup>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.drawerContent}>
+          <View style={styles.userInfoSection}>
+            <View style={styles.imagecontainer}>
+              <Avatar.Image source={require('../assets/profile.png')} />
+            </View>
 
-      <Button title="Open Modal" onPress={() => setVisible(true)} />
+            <View style={styles.txtcontainer}>
+              <Text style={styles.title}>Anushka Wable</Text>
+              <Text style={styles.id}>id@app</Text>
+            </View>
+          </View>
+
+          {/* <Drawer.Section style={styles.drawerSection} > </Drawer.Section> */}
+          <View>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="home" color={theme.textSecondary} size={size} />
+              )}
+              label="Home"
+              labelStyle={{color:theme.textSecondary}}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="heart" color={theme.textSecondary} size={size} />
+              )}
+              label="Wishlist"
+              labelStyle={{color:theme.textSecondary}}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icone
+                  name="chatbox-ellipses-outline"
+                  color={theme.textSecondary}
+                  size={size}
+                />
+              )}
+              label="Help Center"
+              labelStyle={{color:theme.textSecondary}}
+              onPress={() => {}}
+            />
+          </View>
+        </View>
+        <Drawer.Section title="Prefrences">
+          <TouchableRipple>
+            <View style={styles.preference}>
+              <Text style={{color:theme.textPrimary}}>Dark Theme</Text>
+
+              <Switch value={isDark} onValueChange={toggleTheme}/>
+
+            </View>
+          </TouchableRipple>
+        </Drawer.Section>
+      </DrawerContentScrollView>
+
+      <View style={styles.divider} />
+      <Drawer.Section style={styles.bottomDrawerSection}>
+        <DrawerItem
+          icon={({ color, size }) => (
+            <Icon name="log-out" color={theme.textPrimary} size={size} />
+          )}
+          label="Sign Out"
+          labelStyle={{color:theme.textPrimary}}
+        ></DrawerItem>
+      </Drawer.Section>
     </View>
   );
 };
 
-export default ProfileScreen;
+export default CustomDrawer;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
+const getStyles = (theme) => StyleSheet.create({
+  container:{
+    flex:1,
+    backgroundColor:theme.backgroundPrimary,
+  },
+  drawerContent: {
+   flex: 1,
+  },
+  userInfoSection: {
+    paddingLeft: 20,
+  },
+  title: {
+    fontSize: 16,
+    marginTop: 3,
+    fontWeight: 'bold',
+    color:theme.textPrimary,
+  },
+  caption: {
+    fontSize: 14,
+    lineHeight: 14,
+    color:theme.textSecondary,
+  },
+  row: {
+    marginTop: 20,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  modalBackground: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
+  section: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 15,
   },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 20,
-    elevation: 20,
+  paragraph: {
+    fontWeight: 'bold',
+    marginRight: 3,
   },
-  header: {
-   // width: '100%',
-    height: 40,
-    alignItems: 'flex-end',
-    //justifyContent: 'center',
+  drawerSection: {
+    marginTop: 15,
   },
-  image:{
-    height:100,
-    width:100,
+  bottomDrawerSection: {
+    marginBottom: 15,
+    //paddingTop:10,
+    borderTopColor: '#f4f4f4',
+    borderTopWidth: 1,
   },
-  close:{
-    paddingTop:-20,
+  preference: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  tick:{
-    paddingBottom:10,
-    //color:'black'
-    borderWidth:1,
-    borderColor:'black'
-  }
+  imagecontainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtcontainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  id: {
+    fontSize: 14,
+    color: 'grey',
+  },
+  divider: {
+    height: 1,
+    marginHorizontal: 15,
+    marginBottom: 5,
+    borderTopColor: '#f4f4f4',
+  },
 });

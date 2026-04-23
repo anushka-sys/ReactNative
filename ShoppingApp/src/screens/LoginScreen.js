@@ -15,9 +15,7 @@ const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={toggleTheme}>
-  <Text>Toggle Theme</Text>
-</TouchableOpacity>
+      
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Welcome{'\n'}Back!</Text>
       </View>
