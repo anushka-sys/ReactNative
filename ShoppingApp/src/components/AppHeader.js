@@ -1,18 +1,22 @@
-import React from "react";
+import React,{useContext} from "react";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { colors, fontSizes, layout,spacing } from '../styles';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { DrawerActions } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from "../context/ThemeContext";
 
 const AppHeader = () => {
   const Navigation = useNavigation();
+  const { theme} = useContext(ThemeContext);
+    const styles = getStyles(theme);
+
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.container}>
         
         <TouchableOpacity style={styles.leftBtn}onPress={()=>Navigation.openDrawer()}>
-          <Icon name="menu" size={24} color="#111" />
+          <Icon name="menu" size={24} style={styles.icone} />
         </TouchableOpacity>
 
         <View style={styles.logoWrapper}>
@@ -36,7 +40,7 @@ const AppHeader = () => {
 
 export default AppHeader;
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   
   headerWrapper: {
     paddingTop: spacing.couponGap,
@@ -80,5 +84,8 @@ const styles = StyleSheet.create({
     height: spacing.gapb,
     resizeMode: "contain",
   },
+  icone:{
+    color: theme.textPrimary,
+  }
 
 });
