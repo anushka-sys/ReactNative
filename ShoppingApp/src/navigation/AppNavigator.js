@@ -7,6 +7,7 @@ import ForgetPassword from '../screens/ForgetPassword';
 import GetStartedScreen from '../screens/GetStartedScreen';
 import TabNavigator from './TabNavigator';
 import ProductDetails from '../screens/ProductDetails'
+import ProfileScreen from '../screens/ProfileScreen';
 import DrawerNavigator from './DrawerNavigator'
 
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ const AppNavigator = () => {
         <Stack.Screen name="MainTabs" component={DrawerNavigator} />
 
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

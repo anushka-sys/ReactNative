@@ -26,7 +26,10 @@ const AppHeader = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.rightBtn}>
+        <TouchableOpacity 
+        style={styles.rightBtn}
+        onPress={() => Navigation.navigate('Profile')}
+        >
           <Image
             source={require("../assets/profile.png")}
             style={styles.profile}

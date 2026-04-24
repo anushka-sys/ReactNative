@@ -33,7 +33,7 @@ const styles = getStyles(theme);
 
         <View style={styles.inputContainer}>
           <Iconuser name="locked" size={20} color={colors.textPlaceholder} style={styles.icon} />
-          <TextInput
+          <TextInput 
             style={styles.input}
             placeholder="Enter password"
             placeholderTextColor={colors.textPlaceholder}

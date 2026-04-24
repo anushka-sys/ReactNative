@@ -19,8 +19,8 @@ const HomePage = () => {
   const [resetKey, setResetKey] = useState(0);
 
    const { theme } = useContext(ThemeContext);
-
    const styles = getStyles(theme);
+   
 
   let filteredProducts = products;
 //search text
