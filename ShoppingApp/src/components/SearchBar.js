@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   NativeModules,
   NativeEventEmitter,
+  DeviceEventEmitter,
+  PermissionsAndroid,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../context/ThemeContext';
 
 const { RnVoicekit } = NativeModules;
-const voiceEmitter = new NativeEventEmitter(RnVoicekit);
+//const voiceEmitter = new NativeEventEmitter(RnVoicekit);
 
 const SearchBar = ({ value, onChangeText }) => {
   const { theme } = useContext(ThemeContext);
@@ -20,44 +23,50 @@ const SearchBar = ({ value, onChangeText }) => {
 
   useEffect(() => {
     const subs = [
-      voiceEmitter.addListener("onSpeechStart", () => {
-        setIsListening(true);
+      DeviceEventEmitter.addListener('onSpeechStart', () => setIsListening(true)),
+      DeviceEventEmitter.addListener('onSpeechEnd', () => setIsListening(false)),
+      DeviceEventEmitter.addListener('onSpeechPartialResults', (e) => {
+        if (e.value?.length > 0) onChangeText(e.value[0]);
       }),
-
-      voiceEmitter.addListener("onSpeechEnd", () => {
+      DeviceEventEmitter.addListener('onSpeechResults', (e) => {
+        if (e.value?.length > 0) onChangeText(e.value[0]);
         setIsListening(false);
       }),
-
-      // Partial results — update text in real-time as user speaks
-      voiceEmitter.addListener("onSpeechPartialResults", (e) => {
-        if (e.value?.length > 0) {
-          onChangeText(e.value[0]);
-        }
-      }),
-
-      // Final result — set the confirmed text
-      voiceEmitter.addListener("onSpeechResults", (e) => {
-        if (e.value?.length > 0) {
-          onChangeText(e.value[0]);
-        }
-        setIsListening(false);
-      }),
-
-      voiceEmitter.addListener("onSpeechError", (e) => {
-        console.error("Voice error:", e.message);
+      DeviceEventEmitter.addListener('onSpeechError', (e) => {
+        console.error('Voice error:', e.message);
         setIsListening(false);
       }),
     ];
 
-    // Cleanup all listeners on unmount
     return () => subs.forEach((s) => s.remove());
   }, []);
-  
+
+  const requestMicPermission = async () => {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Microphone Permission',
+          message: 'App needs microphone access for voice search',
+          buttonPositive: 'Allow',
+          buttonNegative: 'Deny',
+        }
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true;
+  };
+
   const startListening = async () => {
     try {
-      await RnVoicekit.start({ locale: "en-US", partialResults: true });
+      const hasPermission = await requestMicPermission();
+      if (!hasPermission) {
+        console.warn('Microphone permission denied');
+        return;
+      }
+      await RnVoicekit.start({ locale: 'en-US', partialResults: true });
     } catch (e) {
-      console.error("Start error:", e);
+      console.error('Start error:', e);
     }
   };
 
@@ -66,7 +75,7 @@ const SearchBar = ({ value, onChangeText }) => {
       await RnVoicekit.stop();
       setIsListening(false);
     } catch (e) {
-      console.error("Stop error:", e);
+      console.error('Stop error:', e);
     }
   };
 
