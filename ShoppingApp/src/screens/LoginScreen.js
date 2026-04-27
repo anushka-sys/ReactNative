@@ -1,17 +1,35 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
-import React,{ useContext } from 'react';
+import React,{useState, useContext } from 'react';
 import { colors, fontSizes, fontWeights, spacing, radius, layout } from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 import {ThemeContext} from '../context/ThemeContext';
+import {loginUser} from '../utils/auth'
+import { Alert } from 'react-native';
 
 const LoginScreen = () => {
   const Navigation = useNavigation();
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const styles = getStyles(theme);
 
-const styles = getStyles(theme);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+    
+  const handleLogin = async () => {
+    if (!username.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+    const result = await loginUser(username.trim(), password.trim());
+    if (result.success) {
+      Navigation.navigate('MainTabs'); // ← goes to your DrawerNavigator
+    } else {
+      Alert.alert('Login Failed', result.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,6 +46,10 @@ const styles = getStyles(theme);
             style={styles.input}
             placeholder="Enter username"
             placeholderTextColor={colors.textPlaceholder}
+             value={username}
+            onChangeText={setUsername}
+             autoCapitalize="none"
+              
           />
         </View>
 
@@ -37,7 +59,9 @@ const styles = getStyles(theme);
             style={styles.input}
             placeholder="Enter password"
             placeholderTextColor={colors.textPlaceholder}
-            secureTextEntry
+             secureTextEntry
+      value={password}
+      onChangeText={setPassword}
           />
           <Icone name="eye" size={20} color={colors.textPlaceholder} style={styles.icon}/>
         </View>
@@ -53,7 +77,7 @@ const styles = getStyles(theme);
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => Navigation.navigate('GetStartedScreen')}
+          onPress={handleLogin}
         >
           <Text style={styles.buttonTitle}>Login</Text>
         </TouchableOpacity>
@@ -196,3 +220,7 @@ const getStyles = (theme) => StyleSheet.create({
 });
 export default LoginScreen;
 
+
+
+// console.js:668 Error: Uncaught (in promise, id: 0): "ReferenceError: Property 'USERS_KEY' doesn't exist"
+// Error: TransformError SyntaxError: C:\reactapp\productapp\src\screens\LoginScreen.js: Missing semicolon. (225:10)
