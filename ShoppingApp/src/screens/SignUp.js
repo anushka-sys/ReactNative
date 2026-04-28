@@ -1,38 +1,54 @@
-import {StyleSheet,Text,View,TextInput,TouchableOpacity,Image,
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
 } from 'react-native';
-import React, {useState, useContext } from 'react';
-import {colors,fontSizes,fontWeights,spacing,radius,layout,} from '../styles/index';
+import React, { useState, useContext } from 'react';
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  spacing,
+  radius,
+  layout,
+} from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../context/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
 
-const LoginScreen = () => {
+
+
+const SignUp = () => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
   const styles = getStyles(theme);
+
   const [userId, setUserId] = useState('');
   const [userPass, setUserPass] = useState('');
 
-  const handleLogin = async () => {
-    const storedId = await AsyncStorage.getItem('USER_ID');
-    const storedPass = await AsyncStorage.getItem('USER_PASS');
-
-    if (userId === storedId && userPass === storedPass) {
-      await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
-      navigation.replace('MainTabs');
-    } else {
-      Alert('Invalid credentials');
+  const handleSignUp = async () => {
+    if (!userId || !userPass) {
+      Alert('enter id and pass');
+      return;
     }
+    await AsyncStorage.setItem('USER_ID', userId);
+    await AsyncStorage.setItem('USER_PASS', userPass);
+    await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
+
+    navigation.replace('Login'); // go to home
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Welcome{'\n'}Back!</Text>
+        <Text style={styles.title}>Create an{'\n'}account</Text>
       </View>
 
       <View style={styles.formContainer}>
@@ -63,7 +79,6 @@ const LoginScreen = () => {
             style={styles.input}
             placeholder="Enter password"
             placeholderTextColor={colors.textPlaceholder}
-            secureTextEntry
             value={userPass}
             onChangeText={setUserPass}
           />
@@ -74,19 +89,33 @@ const LoginScreen = () => {
             style={styles.icon}
           />
         </View>
-      </View>
 
-      <View style={styles.forgotContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-          <Text style={styles.forgotText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Iconuser
+            name="locked"
+            size={20}
+            color={colors.textPlaceholder}
+            style={styles.icon}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter password"
+            placeholderTextColor={colors.textPlaceholder}
+          />
+          <Icone
+            name="eye"
+            size={20}
+            color={colors.textPlaceholder}
+            style={styles.icon}
+          />
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          //onPress={navigation.navigate('GetStartedScreen')}
-          onPress={handleLogin}
+          //onPress={() => navigation.navigate('GetStartedScreen')}
+          onPress={handleSignUp}
         >
           <Text style={styles.buttonTitle}>Login</Text>
         </TouchableOpacity>
@@ -112,14 +141,16 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.bottomContainer}>
-        <Text style={styles.bottomText}>Create An Account </Text>
+        <Text style={styles.bottomText}>I already have an account </Text>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signupText}>Sign Up</Text>
+          <Text style={styles.signupText}>Log</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
+export default SignUp;
 
 const getStyles = theme =>
   StyleSheet.create({
@@ -140,12 +171,12 @@ const getStyles = theme =>
     },
 
     formContainer: {
-      gap: spacing.gapb,
+      gap: 20,
     },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: theme.backgroundMuted,
+      backgroundColor: theme.backgroundPrimary,
       borderRadius: radius.input,
       borderWidth: 1,
       borderColor: colors.border,
@@ -153,7 +184,7 @@ const getStyles = theme =>
     icon: {
       paddingLeft: spacing.paymentPadding,
       paddingRight: spacing.inputPaddingH,
-      paddingVertical: spacing.screenPaddingTop,
+      paddingVertical: 10,
     },
     input: {
       flex: 1,
@@ -199,7 +230,7 @@ const getStyles = theme =>
       paddingTop: spacing.loginp,
     },
     dividerText: {
-      color: colors.textSecondary,
+      color: theme.textPrimary,
       fontSize: fontSizes.label,
       fontWeight: fontWeights.medium,
     },
@@ -219,10 +250,10 @@ const getStyles = theme =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: spacing['5xl'],
+      paddingTop: 10,
     },
     bottomText: {
-      color: colors.textSecondary,
+      color: theme.textPrimary,
       fontSize: fontSizes.label,
       fontWeight: fontWeights.medium,
     },
@@ -233,4 +264,3 @@ const getStyles = theme =>
       textDecorationLine: 'underline',
     },
   });
-export default LoginScreen;
