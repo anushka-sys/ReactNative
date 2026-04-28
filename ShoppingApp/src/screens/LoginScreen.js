@@ -1,16 +1,33 @@
-import {StyleSheet, Text, View, TextInput, TouchableOpacity, Image,} from 'react-native';
-import React, { useContext } from 'react';
-import { colors, fontSizes, fontWeights, spacing, radius, layout,} from '../styles/index';
+import {StyleSheet,Text,View,TextInput,TouchableOpacity,Image,
+} from 'react-native';
+import React, {useState, useContext } from 'react';
+import {colors,fontSizes,fontWeights,spacing,radius,layout,} from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../context/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const LoginScreen = () => {
-  const Navigation = useNavigation();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
   const styles = getStyles(theme);
+  const [userId, setUserId] = useState('');
+  const [userPass, setUserPass] = useState('');
+
+  const handleLogin = async () => {
+    const storedId = await AsyncStorage.getItem('USER_ID');
+    const storedPass = await AsyncStorage.getItem('USER_PASS');
+
+    if (userId === storedId && userPass === storedPass) {
+      await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
+      navigation.replace('MainTabs');
+    } else {
+      Alert('Invalid credentials');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,7 +47,8 @@ const LoginScreen = () => {
             style={styles.input}
             placeholder="Enter username"
             placeholderTextColor={colors.textPlaceholder}
-            
+            value={userId}
+            onChangeText={setUserId}
           />
         </View>
 
@@ -46,7 +64,8 @@ const LoginScreen = () => {
             placeholder="Enter password"
             placeholderTextColor={colors.textPlaceholder}
             secureTextEntry
-      
+            value={userPass}
+            onChangeText={setUserPass}
           />
           <Icone
             name="eye"
@@ -58,13 +77,17 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.forgotContainer}>
-        <TouchableOpacity onPress={() => Navigation.navigate('ForgetPassword')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={Navigation.navigate('GetStartedScreen')}>
+        <TouchableOpacity
+          style={styles.button}
+          //onPress={navigation.navigate('GetStartedScreen')}
+          onPress={handleLogin}
+        >
           <Text style={styles.buttonTitle}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -90,7 +113,7 @@ const LoginScreen = () => {
 
       <View style={styles.bottomContainer}>
         <Text style={styles.bottomText}>Create An Account </Text>
-        <TouchableOpacity onPress={() => Navigation.navigate('SignUp')}>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.signupText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
