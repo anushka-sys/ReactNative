@@ -1,32 +1,17 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {StyleSheet,Text,View,TextInput,TouchableOpacity,Image,} from 'react-native';
 import React,{ useContext } from 'react';
-import {
-  colors,
-  fontSizes,
-  fontWeights,
-  spacing,
-  radius,
-  layout,
-} from '../styles';
+import { colors, fontSizes, fontWeights, spacing, radius, layout,} from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 import {ThemeContext} from '../context/ThemeContext';
 
-
 const SignUp = () => {
   const Navigation = useNavigation();
-   const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+  const styles = getStyles(theme);
 
-   const styles = getStyles(theme);
   return (
  <View style={styles.container}>
  
@@ -51,7 +36,7 @@ const SignUp = () => {
              style={styles.input}
              placeholder="Enter password"
              placeholderTextColor={colors.textPlaceholder}
-             secureTextEntry
+             
            />
            <Icone name="eye" size={20} color={colors.textPlaceholder} style={styles.icon}/>
          </View>
@@ -62,14 +47,14 @@ const SignUp = () => {
              style={styles.input}
              placeholder="Enter password"
              placeholderTextColor={colors.textPlaceholder}
-             secureTextEntry
+             
            />
            <Icone name="eye" size={20} color={colors.textPlaceholder} style={styles.icon}/>
          </View>
  
        </View>
- 
- 
+
+
        <View style={styles.buttonContainer}>
          <TouchableOpacity
            style={styles.button}
