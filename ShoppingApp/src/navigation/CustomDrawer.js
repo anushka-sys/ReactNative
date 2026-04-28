@@ -11,10 +11,22 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../context/ThemeContext';
 import Icone from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 const CustomDrawer = props => {
+  const navigation = useNavigation();
   const { isDark, toggleTheme ,theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
+
+  const handleLogout = async () =>{
+    await AsyncStorage.setItem('IS_LOGGED_IN','false');
+    navigation.dispatch(CommonActions.reset({
+      index:0,
+      routes:[{name:'Login'}]
+    }))
+  }
 
   return (
     <View style={styles.container}>
@@ -83,6 +95,7 @@ const CustomDrawer = props => {
           )}
           label="Sign Out"
           labelStyle={{color:theme.textPrimary}}
+          onPress={handleLogout}
         ></DrawerItem>
       </Drawer.Section>
     </View>

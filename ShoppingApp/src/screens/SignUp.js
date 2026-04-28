@@ -8,22 +8,13 @@ import {
   Alert,
 } from 'react-native';
 import React, { useState, useContext } from 'react';
-import {
-  colors,
-  fontSizes,
-  fontWeights,
-  spacing,
-  radius,
-  layout,
-} from '../styles';
+import {colors,fontSizes,fontWeights,spacing,radius,layout,} from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Iconuser from 'react-native-vector-icons/Fontisto';
 import Icone from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../context/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -35,14 +26,14 @@ const SignUp = () => {
 
   const handleSignUp = async () => {
     if (!userId || !userPass) {
-      Alert('enter id and pass');
+      Alert.alert('enter id and pass');
       return;
     }
     await AsyncStorage.setItem('USER_ID', userId);
     await AsyncStorage.setItem('USER_PASS', userPass);
     await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
 
-    navigation.replace('Login'); // go to home
+    navigation.replace('Login'); 
   };
 
   return (

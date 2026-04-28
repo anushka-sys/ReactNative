@@ -25,7 +25,7 @@ const LoginScreen = () => {
       await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
       navigation.replace('MainTabs');
     } else {
-      Alert('Invalid credentials');
+      Alert.alert('Invalid credentials');
     }
   };
 
