@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   NativeModules,
-  NativeEventEmitter,
   DeviceEventEmitter,
   PermissionsAndroid,
   Platform
@@ -131,12 +130,3 @@ const getStyles = theme =>
       padding: 0,
     },
   });
-
-
-//   SearchBar.js:14 `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
-// SearchBar.js:14 `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
-// console.js:668 Running "productapp" with {"rootTag":1,"initialProps":{},"fabric":true}
-// SearchBar.js:47 Voice error: Insufficient permissions
-// anonymous	@	SearchBar.js:47
-
-
