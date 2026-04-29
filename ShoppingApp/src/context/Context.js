@@ -103,7 +103,6 @@ useEffect(() => {
   const clearCart = () => {
     setCartItems([]);
   };
-
   
   return (
     <CartContext.Provider

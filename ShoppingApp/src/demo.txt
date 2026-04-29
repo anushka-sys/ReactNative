@@ -1,197 +1,287 @@
-Good, this is actually simple. Your app already has SignUp → Login → Navigator → HomePage, so you don’t need architecture changes. You only need a tiny auth persistence layer with AsyncStorage and a boolean flag.
-Below is the clean minimal implementation exactly matching what you asked.
-First understand your current flow (from your code)
-Your navigation stack:
-GetStartedScreen
-LoginScreen
-SignUp
-DrawerNavigator / TabNavigator → HomePage
-Right now login is fake UI only. No persistence. No session.
-You want:
-Save user id + password during signup
-On login → fetch saved data
-If match → set flag isLoggedIn = true
-Navigate to Home
-Next app open → auto login using flag
-That’s it.
-Step 1 — Install AsyncStorage
-Run:
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
+import React, { useState } from 'react';
+import Iconarrow from 'react-native-vector-icons/Entypo';
+import Iconfont from 'react-native-vector-icons/FontAwesome5';
+import Geolocation from '@react-native-community/geolocation';
+// import axios from 'axios'; // NEW: replaced fetch with axios for Nominatim
+import { colors, radius } from '../styles/index';
+import { useNavigation } from '@react-navigation/native';
 
-npm install @react-native-async-storage/async-storage
-Step 2 — Decide storage keys (important)
-Use only 3 keys:
+const InputField = ({ label, placeholder, value, onChangeText }) => (
+  <View style={styles.inputWrapper}>
+    <Text style={styles.inputLabel}>{label}</Text>
+    <TextInput
+      style={styles.inputBox}
+      placeholder={placeholder}
+      placeholderTextColor="#999"
+      value={value}
+      onChangeText={onChangeText}
+    />
+  </View>
+);
 
-USER_ID
-USER_PASS
-IS_LOGGED_IN
-Keep it stupid simple.
+const ProfileScreen = () => {
+  const navigation = useNavigation();
+  const [locating, setLocating] = useState(false);
+  // const [currLatitude, setCurrLatitude] = useState(null);   // NEW: store coords in state
+  // const [currLongitude, setCurrLongitude] = useState(null); // NEW: store coords in state
+  const [formData, setFormData] = useState({
+    id: '',
+    pass: '',
+    pincode: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+  });
 
-Step 3 — Update SignUp.js (STORE USER)
-Open: src/screens/SignUp.js
-Find the function where signup button is pressed.
-You already collect email & password in state.
-Add this import on top:
-JavaScript
-import AsyncStorage from '@react-native-async-storage/async-storage';
-Now add this function inside SignUp screen:
-JavaScript
-const handleSignUp = async () => {
-  try {
-    await AsyncStorage.setItem('USER_ID', email);
-    await AsyncStorage.setItem('USER_PASS', password);
-    await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
-
-    navigation.replace('DrawerNavigator'); // go to home
-  } catch (e) {
-    console.log('Error saving user', e);
-  }
-};
-Attach it to your signup button:
-JavaScript
-<TouchableOpacity onPress={handleSignUp}>
-Done. Signup now creates account + logs in.
-
-Step 4 — Update LoginScreen.js (CHECK USER)
-Open: src/screens/LoginScreen.js
-Add import:
-JavaScript
-import AsyncStorage from '@react-native-async-storage/async-storage';
-Add login function:
-JavaScript
-const handleLogin = async () => {
-  try {
-    const storedId = await AsyncStorage.getItem('USER_ID');
-    const storedPass = await AsyncStorage.getItem('USER_PASS');
-
-    if (email === storedId && password === storedPass) {
-      await AsyncStorage.setItem('IS_LOGGED_IN', 'true');
-      navigation.replace('DrawerNavigator');
-    } else {
-      alert('Invalid credentials');
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-Attach to login button:
-JavaScript
-<TouchableOpacity onPress={handleLogin}>
-Now login actually validates stored user.
-
-
-Step 5 — Auto Login when app opens (MOST IMPORTANT)
-Open: src/navigation/AppNavigator.js
-This is where the app decides first screen.
-Add import:
-JavaScript
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
-Modify component:
-BEFORE (you probably return NavigationContainer directly)
-AFTER — add auth check
-JavaScript
-export default function AppNavigator() {
-  const [initialRoute, setInitialRoute] = useState(null);
-
-  useEffect(() => {
-    checkLogin();
-  }, []);
-
-  const checkLogin = async () => {
-    const flag = await AsyncStorage.getItem('IS_LOGGED_IN');
-    setInitialRoute(flag === 'true' ? 'DrawerNavigator' : 'GetStartedScreen');
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  if (!initialRoute) return null; // wait until check finishes
+  // NEW: replaced bigdatacloud fetch block with Nominatim via axios
+  // const getLocationName = async (latitude, longitude) => {
+  //   try {
+  //     const result = await axios.get(
+  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+  //       {
+  //         headers: {
+  //           'User-Agent': 'Ecommerce',
+  //           Accept: 'application/json',
+  //         },
+  //       },
+  //     );
+  //     const data = result.data;
+  //     setFormData(prev => ({
+  //       ...prev,
+  //       pincode: data.address.postcode || '',
+  //       address: data.display_name || '',
+  //       city:
+  //         (data.address.suburb || '') + ' ' + (data.address.city || ''),
+  //       state: data.address.state || '',
+  //       country: data.address.country || '',
+  //     }));
+  //   } catch (error) {
+  //     console.error('Reverse geocoding failed:', error);
+  //   }
+  // };
+
+  const handleDetectLocation = () => {
+    setLocating(true);
+    Geolocation.getCurrentPosition(
+      async position => {
+        const { latitude, longitude } = position.coords;
+        console.log('lat/lng:', latitude, longitude);
+
+        // NEW: replaced the fetch/bigdatacloud block below with getLocationName
+        // setCurrLatitude(latitude);
+        // setCurrLongitude(longitude);
+        // await getLocationName(latitude, longitude);
+        // setLocating(false);
+
+        try {
+          const res = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+          );
+
+          console.log('Response status:', res.status);
+
+          const text = await res.text();
+          console.log('Raw response:', text);
+
+          const data = JSON.parse(text);
+
+          setFormData(prev => ({
+            ...prev,
+            city:    data.city || data.locality || '',
+            state:   data.principalSubdivision || '',
+            country: data.countryName || '',
+            pincode: data.postcode || '',
+          }));
+        } catch (err) {
+          console.error('Reverse geocoding failed:', err);
+        } finally {
+          setLocating(false);
+        }
+      },
+      error => {
+        console.error('Geolocation error:', error);
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
+  };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
-        <Stack.Screen name="GetStartedScreen" component={GetStartedScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-Now app remembers login state.
-Step 6 — Logout (you didn’t ask but you NEED it)
-Inside ProfileScreen logout button:
-JavaScript
-const logout = async () => {
-  await AsyncStorage.setItem('IS_LOGGED_IN', 'false');
-  navigation.replace('LoginScreen');
-};
-Final Flow (simple + correct)
-App start → check flag
-true → Home
-false → GetStarted
-Signup → save id/pass + flag true → Home
-Login → compare → flag true → Home
-Logout → flag false → Login
-No Redux. No Context. No overengineering. Just storage + flag.
-Exactly what you asked.
-
-
-
-Anushka Wable <wableanushka@gmail.com>
-12:29 PM (6 minutes ago)
-to me
-
-import AppNavigator from './src/navigation/AppNavigator';
-import { PaperProvider } from 'react-native-paper';
-import ThemeProvider from './src/context/ThemeContext';
-import CartProvider from './src/context/Context';
-import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const App = () => {
-  const [initialRoute, setInitialRoute] = useState(null); // null = loading
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const isLoggedIn = await AsyncStorage.getItem('IS_LOGGED_IN');
-      setInitialRoute(isLoggedIn === 'true' ? 'MainTabs' : 'Login');
-    };
-    checkLoginStatus();
-  }, []);
-
-  if (initialRoute === null) return null; // or a splash/loading screen
-
-  return (
-    <ThemeProvider>
-      <CartProvider>
-        <PaperProvider>
-          <AppNavigator initialRoute={initialRoute} />
-        </PaperProvider>
-      </CartProvider>
-    </ThemeProvider>
-  );
-};
-
-export default App;
-
-App navigator
-
-const AppNavigator = ({ initialRoute }) => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={initialRoute} {/* 👈 this is the key change */}
-        screenOptions={{ headerShown: false }}
+    <View style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 40 }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-        <Stack.Screen name="GetStartedScreen" component={GetStartedScreen} />
-        <Stack.Screen name="MainTabs" component={DrawerNavigator} />
-        <Stack.Screen name="ProductDetails" component={ProductDetails} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Iconarrow name="chevron-thin-left" size={20} color="#000" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Checkout</Text>
+          <View style={{ width: 20 }} />
+        </View>
+
+        {/* Profile Image */}
+        <View style={styles.imagecontainer}>
+          <Image
+            source={require('../assets/profilel.png')}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+
+        {/* Personal Details */}
+        <Text style={styles.sectionTitle}>Personal Details</Text>
+        <InputField label="Email Address" placeholder="Enter your email" />
+        <InputField label="Password" placeholder="********" />
+
+        <View style={styles.forgotContainer}>
+          <TouchableOpacity>
+            <Text style={styles.forgotText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Address Details */}
+        <View style={styles.addressHeader}>
+          <Text style={styles.sectionTitle}>Business Address Details</Text>
+          <TouchableOpacity
+            style={styles.detectButton}
+            onPress={handleDetectLocation}
+            disabled={locating}
+          >
+            {locating ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <>
+                <Iconfont name="location-arrow" size={12} color="#fff" />
+                <Text style={styles.detectText}>Detect</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        <InputField
+          label="Pincode"
+          placeholder="Enter pincode"
+          value={formData.pincode}
+          onChangeText={v => handleChange('pincode', v)}
+        />
+        <InputField
+          label="Address"
+          placeholder="Enter address"
+          value={formData.address}
+          onChangeText={v => handleChange('address', v)}
+        />
+        <InputField
+          label="City"
+          placeholder="City"
+          value={formData.city}
+          onChangeText={v => handleChange('city', v)}
+        />
+        <InputField
+          label="State"
+          placeholder="State"
+          value={formData.state}
+          onChangeText={v => handleChange('state', v)}
+        />
+        <InputField
+          label="Country"
+          placeholder="Country"
+          value={formData.country}
+          onChangeText={v => handleChange('country', v)}
+        />
+
+        {/* Save Button */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('GetStartedScreen')}
+          >
+            <Text style={styles.buttonTitle}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
+export default ProfileScreen;
 
-
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#fff' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingTop: 40,
+  },
+  title: { fontSize: 18, fontWeight: '600' },
+  imagecontainer: { alignItems: 'center', marginTop: 30 },
+  image: { width: 96, height: 96, borderRadius: 48 },
+  sectionTitle: {
+    marginTop: 30,
+    paddingHorizontal: 24,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  inputWrapper: { marginTop: 20, paddingHorizontal: 24 },
+  inputLabel: { fontSize: 12, marginBottom: 8, color: '#444' },
+  inputBox: {
+    borderWidth: 1,
+    borderColor: '#C8C8C8',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 14,
+  },
+  forgotContainer: {
+    alignItems: 'flex-end',
+    paddingHorizontal: 24,
+    marginTop: 10,
+  },
+  forgotText: { color: '#F83758', fontSize: 12, fontWeight: '500' },
+  buttonContainer: { paddingHorizontal: 24, marginTop: 40 },
+  button: {
+    width: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: radius.button,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  buttonTitle: { color: colors.textOnPrimary, fontSize: 16, fontWeight: '600' },
+  addressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    paddingHorizontal: 24,
+  },
+  detectButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  // NEW: added missing detectText style
+  detectText: { color: '#fff', fontSize: 12, fontWeight: '500' },
+});

@@ -22,6 +22,7 @@ const AppNavigator = () => {
     });
   }, []);
   if (!initialRoute) return null;
+  
   return (
     <NavigationContainer>
       <Stack.Navigator
