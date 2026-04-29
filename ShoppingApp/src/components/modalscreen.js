@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   Modal,
   TouchableOpacity,
   Image,
@@ -10,54 +9,33 @@ import {
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
-const ModalPopup = ({ visible, children, onClose }) => {
+export const ModalPopup = ({ visible, onClose }) => {
   return (
-    <Modal transparent 
-    visible={visible} 
-    animationType="fade"
-    statusBarTranslucent
-    >
+    <Modal transparent visible={visible} animationType="fade" statusBarTranslucent>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          
-            <TouchableOpacity onPress={onClose} style={styles.close}>
-              <Icon name="x" size={20} color={'#000'} />
-            </TouchableOpacity>
-         
-          {children}
+          <TouchableOpacity onPress={onClose} style={styles.close}>
+            <Icon name="x" size={20} color={'#000'} />
+          </TouchableOpacity>
+          <View style={styles.imageWrapper}>
+            <Image
+              source={require('../assets/circle.png')}
+              style={styles.image}
+              resizeMode='contain'
+            />
+            <Image
+              source={require('../assets/tick.png')}
+              style={styles.tick}
+              resizeMode='contain'
+            />
+          </View>
+          <Text style={styles.text}>Payment done successfully.</Text>
         </View>
       </View>
     </Modal>
   );
 };
 
-const ModalScreen = () => {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <View style={styles.container}>
-      <ModalPopup visible={visible} onClose={() => setVisible(false)}>
-        <View style={styles.imageWrapper}>
-          <Image
-            source={require('../assets/circle.png')}
-            style={styles.image}
-            resizeMode='contain'
-          />
-          <Image
-            source={require('../assets/tick.png')}
-            style={styles.tick}
-             resizeMode='contain'
-          />
-        </View>
-        <Text style={styles.text}>Payment done successfully.</Text>
-      </ModalPopup>
-
-      <Button title="Open Modal" onPress={() => setVisible(true)} />
-    </View>
-  );
-};
-
-export default ModalScreen;
 
 const styles = StyleSheet.create({
   container: {
