@@ -8,12 +8,13 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Iconarrow from 'react-native-vector-icons/Entypo';
 import Iconfont from 'react-native-vector-icons/FontAwesome5'; 
 import Geolocation from '@react-native-community/geolocation';
 import { colors, radius } from '../styles/index';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const InputField = ({ label, placeholder, value, onChangeText }) => (
   <View style={styles.inputWrapper}>
@@ -31,6 +32,8 @@ const InputField = ({ label, placeholder, value, onChangeText }) => (
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const [locating, setLocating] = useState(false);
+  const [currLatitude,setCurrLatitude] = useState(null)
+  const [currLongitude,setCurrLongitude] = useState(null)
   const [formData, setFormData] = useState({
     id: '',
     pass: '',
@@ -45,45 +48,64 @@ const ProfileScreen = () => {
   setFormData(prev => ({ ...prev, [field]: value }));
 };
 
-const handleDetectLocation = () => {
-  setLocating(true);
+ const getLocationName = async (latitude, longitude) => {
+    try {
+      const result = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+        // `https://nominatim.openstreetmap.org/reverse?format=json&lat=18.553933&lon=73.776828`,
+        {
+          headers: {
+            "User-Agent": "Ecommerce",
+            "Accept": "application/json"
+          },
+        },
+      );
+      const data = result.data;
+      setFormData(prev => ({
+        ...prev,
+        pincode: data.address.postcode || '',
+        address: data.display_name || '',
+        city:
+          (data.address.suburb || '') + ' ' + (data.address.city || ''),
+        state: data.address.state || '',
+        country: data.address.country || '',
+      }));
+    } catch (error) {
+      console.error('Reverse geocoding failed:', error);
+    }
+  };
+
+//  const handleDetectLocation = () => {
+//     setLocating(true);
+//     Geolocation.getCurrentPosition(
+//       async position => {
+//         const { latitude, longitude } = position.coords;
+//         console.log('lat/lng:', latitude, longitude);
+//         setCurrLatitude(latitude);
+//         setCurrLongitude(longitude);
+//         await getLocationName(latitude, longitude);
+//         setLocating(false);
+//       },
+//       error => {
+//         console.error('Geolocation error:', error);
+//         setLocating(false);
+//       },
+//       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+//     );
+//   };
+
+useEffect(()=>{
   Geolocation.getCurrentPosition(
-    async position => {
-      const { latitude, longitude } = position.coords;
-      console.log('lat/lng:', latitude, longitude);
-
-      try {
-        const res = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
-        );
-
-        console.log('Response status:', res.status); 
-
-        const text = await res.text();
-        console.log('Raw response:', text);
-
-        const data = JSON.parse(text); 
-
-        setFormData(prev => ({
-          ...prev,
-          city:    data.city || data.locality || '',
-          state:   data.principalSubdivision || '',
-          country: data.countryName || '',
-          pincode: data.postcode || '',
-        }));
-      } catch (err) {
-        console.error('Reverse geocoding failed:', err);
-      } finally {
-        setLocating(false);
-      }
+    (info) =>{
+      const lat = info.coords.latitude;
+      const long = info.coords.longitude;
+      setCurrLatitude(lat);
+      setCurrLongitude(long);
     },
-    error => {
-      console.error('Geolocation error:', error);
-      setLocating(false);
-    },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    (error)=> console.log(error),
+    {enableHighAccuracy:true}
   );
-};
+},[]);
 
   return (
     <View style={styles.container}>
@@ -129,7 +151,7 @@ const handleDetectLocation = () => {
           <Text style={styles.sectionTitle}>Business Address Details</Text>
           <TouchableOpacity
             style={styles.detectButton}
-            onPress={handleDetectLocation}
+            onPress={getLocationName}
             disabled={locating}
           >
             {locating ? (
@@ -294,30 +316,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-
-/*
-const getLocationName = async () => {
-    try {
-      const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currLatitude}&lon=${currLongitude}`,
-        // const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=18.553933&lon=73.776828`,
-        {
-          headers: {
-            "User-Agent": "Ecommerce",
-            "Accept": "application/json"
-          }
-        }
-      );
-      const data = result.data;
-      setFormData(prev=>({
-        ...prev,
-        pincode: data.address.postcode || '',
-        address: data.display_name || '',
-        city: (data.address.suburb || '') + " " + (data.address.city || ''),
-        state: data.address.state || '',
-        country: data.address.country || '',
-      }));
-    } catch (error) {
-      console.log(error)
-    }
-  }
- */
