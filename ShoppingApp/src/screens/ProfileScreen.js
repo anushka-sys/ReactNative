@@ -32,8 +32,8 @@ const InputField = ({ label, placeholder, value, onChangeText }) => (
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const [locating, setLocating] = useState(false);
-  const [currLatitude,setCurrLatitude] = useState(null)
-  const [currLongitude,setCurrLongitude] = useState(null)
+  const [currLatitude,setCurrLatitude] = useState(null);
+  const [currLongitude,setCurrLongitude] = useState(null);
   const [formData, setFormData] = useState({
     id: '',
     pass: '',
@@ -51,11 +51,11 @@ const ProfileScreen = () => {
  const getLocationName = async (latitude, longitude) => {
     try {
       const result = await axios.get(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-        // `https://nominatim.openstreetmap.org/reverse?format=json&lat=18.553933&lon=73.776828`,
+        // `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=18.553933&lon=73.776828`,
         {
           headers: {
-            "User-Agent": "Ecommerce",
+            "User-Agent": "Ecommerce", //requires a string to identify the project 
             "Accept": "application/json"
           },
         },
@@ -114,7 +114,7 @@ useEffect(()=>{
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: 40 }}
       >
-        {/* Header */}
+        
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Iconarrow name="chevron-thin-left" size={20} color="#000" />
@@ -122,11 +122,11 @@ useEffect(()=>{
 
           <Text style={styles.title}>Checkout</Text>
 
-          {/* Empty view keeps title centered */}
+        
           <View style={{ width: 20 }} />
         </View>
 
-        {/* Profile Image */}
+        
         <View style={styles.imagecontainer}>
           <Image
             source={require('../assets/profilel.png')}
@@ -135,7 +135,7 @@ useEffect(()=>{
           />
         </View>
 
-        {/* Personal Details */}
+        
         <Text style={styles.sectionTitle}>Personal Details</Text>
         <InputField label="Email Address" placeholder="Enter your email" />
         <InputField label="Password" placeholder="********" />
@@ -146,7 +146,7 @@ useEffect(()=>{
           </TouchableOpacity>
         </View>
 
-        {/* Address Details */}
+        {/* address details */}
         <View style={styles.addressHeader}>
           <Text style={styles.sectionTitle}>Business Address Details</Text>
           <TouchableOpacity
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  /* Header */
+
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  /* Profile Image */
+  
   imagecontainer: {
     alignItems: 'center',
     marginTop: 30,
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
   },
 
-  /* Section Title */
+  
   sectionTitle: {
     marginTop: 30,
     paddingHorizontal: 24,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // NEW: detect button style
+  
   detectButton: {
     flexDirection: 'row',
     alignItems: 'center',
