@@ -108,7 +108,7 @@ const SignUp = () => {
           //onPress={() => navigation.navigate('GetStartedScreen')}
           onPress={handleSignUp}
         >
-          <Text style={styles.buttonTitle}>Login</Text>
+          <Text style={styles.buttonTitle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
 
