@@ -6,25 +6,84 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Iconarrow from 'react-native-vector-icons/Entypo';
+import Iconfont from 'react-native-vector-icons/FontAwesome5'; 
+import Geolocation from '@react-native-community/geolocation';
 import { colors, radius } from '../styles/index';
 import { useNavigation } from '@react-navigation/native';
 
-const InputField = ({ label, placeholder }) => (
+const InputField = ({ label, placeholder, value, onChangeText }) => (
   <View style={styles.inputWrapper}>
     <Text style={styles.inputLabel}>{label}</Text>
     <TextInput
       style={styles.inputBox}
       placeholder={placeholder}
       placeholderTextColor="#999"
+      value={value}
+      onChangeText={onChangeText}
     />
   </View>
 );
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const [locating, setLocating] = useState(false);
+  const [formData, setFormData] = useState({
+    id: '',
+    pass: '',
+    pincode: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+  });
+
+  const handleChange = (field, value) => {
+  setFormData(prev => ({ ...prev, [field]: value }));
+};
+
+const handleDetectLocation = () => {
+  setLocating(true);
+  Geolocation.getCurrentPosition(
+    async position => {
+      const { latitude, longitude } = position.coords;
+      console.log('lat/lng:', latitude, longitude);
+
+      try {
+        const res = await fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+        );
+
+        console.log('Response status:', res.status); 
+
+        const text = await res.text();
+        console.log('Raw response:', text);
+
+        const data = JSON.parse(text); 
+
+        setFormData(prev => ({
+          ...prev,
+          city:    data.city || data.locality || '',
+          state:   data.principalSubdivision || '',
+          country: data.countryName || '',
+          pincode: data.postcode || '',
+        }));
+      } catch (err) {
+        console.error('Reverse geocoding failed:', err);
+      } finally {
+        setLocating(false);
+      }
+    },
+    error => {
+      console.error('Geolocation error:', error);
+      setLocating(false);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+  );
+};
 
   return (
     <View style={styles.container}>
@@ -50,7 +109,7 @@ const ProfileScreen = () => {
           <Image
             source={require('../assets/profilel.png')}
             style={styles.image}
-            resizeMode='contain'
+            resizeMode="contain"
           />
         </View>
 
@@ -66,12 +125,53 @@ const ProfileScreen = () => {
         </View>
 
         {/* Address Details */}
-        <Text style={styles.sectionTitle}>Business Address Details</Text>
-        <InputField label="Pincode" placeholder="Enter pincode" />
-        <InputField label="Address" placeholder="Enter address" />
-        <InputField label="City" placeholder="City" />
-        <InputField label="State" placeholder="State" />
-        <InputField label="Country" placeholder="Country" />
+        <View style={styles.addressHeader}>
+          <Text style={styles.sectionTitle}>Business Address Details</Text>
+          <TouchableOpacity
+            style={styles.detectButton}
+            onPress={handleDetectLocation}
+            disabled={locating}
+          >
+            {locating ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <>
+                <Iconfont name="location-arrow" size={12} color="#fff" />
+                <Text style={styles.detectText}>Detect</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+        <InputField
+          label="Pincode"
+          placeholder="Enter pincode"
+          value={formData.pincode}
+          onChangeText={v => handleChange('pincode', v)}
+        />
+        <InputField
+          label="Address"
+          placeholder="Enter address"
+          value={formData.address}
+          onChangeText={v => handleChange('address', v)}
+        />
+        <InputField
+          label="City"
+          placeholder="City"
+          value={formData.city}
+          onChangeText={v => handleChange('city', v)}
+        />
+        <InputField
+          label="State"
+          placeholder="State"
+          value={formData.state}
+          onChangeText={v => handleChange('state', v)}
+        />
+        <InputField
+          label="Country"
+          placeholder="Country"
+          value={formData.country}
+          onChangeText={v => handleChange('country', v)}
+        />
 
         {/* Save Button */}
         <View style={styles.buttonContainer}>
@@ -175,4 +275,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  addressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    paddingHorizontal: 24,
+  },
+
+  // NEW: detect button style
+  detectButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
 });
+
+/*
+const getLocationName = async () => {
+    try {
+      const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currLatitude}&lon=${currLongitude}`,
+        // const result = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=18.553933&lon=73.776828`,
+        {
+          headers: {
+            "User-Agent": "Ecommerce",
+            "Accept": "application/json"
+          }
+        }
+      );
+      const data = result.data;
+      setFormData(prev=>({
+        ...prev,
+        pincode: data.address.postcode || '',
+        address: data.display_name || '',
+        city: (data.address.suburb || '') + " " + (data.address.city || ''),
+        state: data.address.state || '',
+        country: data.address.country || '',
+      }));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+ */
