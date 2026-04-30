@@ -7,7 +7,7 @@ import {
   NativeModules,
   DeviceEventEmitter,
   PermissionsAndroid,
-  Platform
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../context/ThemeContext';
