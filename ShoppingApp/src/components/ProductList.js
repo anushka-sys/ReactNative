@@ -18,7 +18,8 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
   const { theme } = useContext(ThemeContext);
     
        const styles = getStyles(theme);
-   
+
+//stars 
     const renderStars = (rating) => {
     const stars = [];
     const filledStars = Math.floor(rating);
@@ -38,9 +39,8 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
     return stars;
   };
 
-
   const renderItem = ({ item }) => (
-    
+   
     <TouchableOpacity
       style={styles.cardWrapper}
       onPress={() => navigation.navigate('ProductDetails', { product: item })}

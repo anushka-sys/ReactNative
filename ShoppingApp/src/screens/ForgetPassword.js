@@ -12,7 +12,6 @@ import {
   fontWeights,
   spacing,
   radius,
-  layout,
 } from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 

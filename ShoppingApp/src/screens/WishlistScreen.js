@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Chatbot from '../screens/chatbot/Chatbot'
 
 const WishlistScreen = () => {
   return (
     <View>
-      <Text>WishlistScreen</Text>
+      <Chatbot />
     </View>
   )
 }

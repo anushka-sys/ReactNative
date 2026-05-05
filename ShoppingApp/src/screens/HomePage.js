@@ -158,7 +158,7 @@ const HomePage = () => {
 };
  
 export default HomePage;
-
+ 
 const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,

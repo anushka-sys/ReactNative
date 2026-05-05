@@ -36,7 +36,6 @@ export const ModalPopup = ({ visible, onClose }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

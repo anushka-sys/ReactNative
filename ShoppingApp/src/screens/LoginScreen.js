@@ -1,5 +1,4 @@
-import {StyleSheet,Text,View,TextInput,TouchableOpacity,Image,
-} from 'react-native';
+import {StyleSheet,Text,View,TextInput,TouchableOpacity,Image,} from 'react-native';
 import React, {useState, useContext } from 'react';
 import {colors,fontSizes,fontWeights,spacing,radius,layout,} from '../styles/index';
 import Icon from 'react-native-vector-icons/FontAwesome5';
