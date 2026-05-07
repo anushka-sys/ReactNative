@@ -11,51 +11,14 @@ import { useNavigation } from '@react-navigation/native';
 import { spacing } from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ThemeContext } from '../context/ThemeContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { WishlistContext } from '../context/WishlistContext';
 
-const WISHLIST_KEY = 'wishlist_items';
 
 const ProductList = ({ products, refreshing, onRefresh }) => {
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
+  const {wishlistId,toggleWishlist} = useContext(WishlistContext);
   const styles = getStyles(theme);
-
-  const [wishlist, setWishlist] = useState([]);
-
-  useEffect(() => {
-    const loadWishlist = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(WISHLIST_KEY);
-        if (stored) {
-          const items = JSON.parse(stored);
-          setWishlist(items.map(item => item.id));
-        }
-      } catch (error) {
-        console.error('error');
-      }
-    };
-    loadWishlist();
-  }, []);
-
-  const toggleWishlist = async (products) => {
-    try {
-      const stored = await AsyncStorage.getItem(WISHLIST_KEY);
-      const current = stored ? JSON.parse(stored) : [];
-      const alreadySaved = current.find(item => item.id === products.id);
-
-      let updated;
-      if (alreadySaved) {
-        updated = current.filter(item => item.id !== products.id);
-        setWishlist(prev => prev.filter((id => id !== products.id)));
-      } else {
-        updated = [...current, products];
-        setWishlist(prev => [...prev, products.id]);
-      }
-      await AsyncStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
-    } catch (error) {
-      console.error('Failed to update wishlist', error);
-    }
-  };
 
   //stars
   const renderStars = rating => {
@@ -78,7 +41,7 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
   };
 
   const renderItem = ({ item }) => {
-    const isWishlisted = wishlist.includes(item.id);
+    const isLiked = wishlistId.includes(item.id);
 
     return (
       <TouchableOpacity
@@ -93,9 +56,9 @@ const ProductList = ({ products, refreshing, onRefresh }) => {
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Icon
-              name={isWishlisted ? 'heart' : 'heart-outline'}
+              name={isLiked ? 'heart' : 'heart-outline'}
               size={18}
-              color={isWishlisted ? '#E53935' : theme.textSecondary}
+              color={isLiked ? '#E53935' : theme.textSecondary}
             />
           </TouchableOpacity>
 
