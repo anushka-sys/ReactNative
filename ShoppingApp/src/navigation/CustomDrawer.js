@@ -71,7 +71,7 @@ const CustomDrawer = props => {
               )}
               label="Help Center"
               labelStyle={{color:theme.textSecondary}}
-              onPress={() => {}}
+              onPress={() => navigation.navigate('Help')}
             />
           </View>
         </View>

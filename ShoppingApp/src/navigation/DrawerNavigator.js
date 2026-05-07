@@ -2,6 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
 import CustomDrawer from './CustomDrawer';
+import ChatbotScreen from '../screens/ChatbotScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -15,15 +16,9 @@ const DrawerNavigator = () => {
       }}
     >
       <Drawer.Screen name="MainApp" component={TabNavigator} />
+      <Drawer.Screen name="Help" component={ChatbotScreen} />
     </Drawer.Navigator>
   );
 };
 
 export default DrawerNavigator;
-
-
-// console.js:668 Found screens with the same name nested inside one another. Check:
-
-// MainTabs > Home, MainTabs > Home > Home
-
-// This can cause confusing behavior during navigation. Consider using unique names for each screen instead.

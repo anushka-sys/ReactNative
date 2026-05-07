@@ -1,3 +1,4 @@
+import { View, Text } from 'react-native';
 import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,8 +28,8 @@ const WishlistProvider = ({ children }) => {
         const stored = await AsyncStorage.getItem(WISHLIST_KEY);
         if (stored) {
           const items = JSON.parse(stored);
-          setWishlist(items);
           setWishlistId(items.map(item => item.id));
+          setWishlist(items);
         }
       } catch (error) {
         console.error('error');
@@ -45,7 +46,7 @@ const WishlistProvider = ({ children }) => {
     setWishlistId(updatedItems.map(i => i.id));
     await AsyncStorage.setItem(WISHLIST_KEY, JSON.stringify(updatedItems));
     }catch(error){
-        console.error('failed to update')
+        console.error("failed to load list",error)
     }
   }
 

@@ -6,7 +6,6 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -54,7 +53,7 @@ const WishlistScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.header}
         onPress={() => navigation.goBack()}
       >
@@ -70,7 +69,7 @@ const WishlistScreen = () => {
         <TouchableOpacity style={styles.clrtxt}>
           <Text>Clear</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       
       <FlatList
         data={wishlist}
@@ -94,8 +93,15 @@ export default WishlistScreen;
 
 const getStyles = theme =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: theme.backgroundPrimary },
-    header: { padding: spacing['3xl'], paddingBottom: spacing.sm },
+    container: 
+    { 
+      flex: 1, 
+      backgroundColor: theme.backgroundPrimary 
+    },
+    header: { 
+      padding: spacing['3xl'], 
+      paddingBottom: spacing.sm
+     },
     screenTitle: {
       fontSize: fontSizes['2xl'],
       fontWeight: fontWeights.bold,
@@ -103,7 +109,10 @@ const getStyles = theme =>
       paddingHorizontal: spacing['3xl'],
       paddingBottom: spacing.md,
     },
-    listContent: { paddingHorizontal: spacing.lg, paddingBottom: 40 },
+    listContent: { 
+      paddingHorizontal: spacing.lg, 
+      paddingBottom: 40 
+    },
 
     // Card
     card: {

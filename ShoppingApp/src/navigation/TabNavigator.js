@@ -1,18 +1,25 @@
 import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useContext } from 'react';
-import {ThemeContext} from '../context/ThemeContext';
+import { ThemeContext } from '../context/ThemeContext';
 import HomePage from '../screens/HomePage';
 import CartScreen from '../screens/CartScreen';
-import WishlistScreen from '../screens/WishlistScreen'
+import WishlistScreen from '../screens/WishlistScreen';
 import { CartContext } from '../context/Context';
+import { WishlistContext } from '../context/WishlistContext';
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
-  const { cart } = useContext(CartContext);
-  const { theme,isDark } = useContext(ThemeContext);
+  const { cartItems } = useContext(CartContext);
+  const { theme, isDark } = useContext(ThemeContext);
+  const {wishlistCount,clearAll} = useContext(WishlistContext)
 
   const getTabBarIcon = (routeName, focused, color, size) => {
     let iconName;
@@ -34,12 +41,13 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) =>
           getTabBarIcon(route.name, focused, color, size),
-        
+
         tabBarActiveTintColor: '#F83758',
         tabBarInactiveTintColor: '#000000',
         tabBarStyle: {
-          paddingBottom: 5,
-          height: 50,
+          paddingBottom: 8,
+          height: 60,
+          //paddingTop:5,
           backgroundColor: theme.backgroundPrimary,
         },
       })}
@@ -49,11 +57,26 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
-       // Change your Cart screen options to:
-options={{ tabBarBadge: cart?.length > 0 ? cart.length : null }}
-
+        // Change your Cart screen options to:
+        options={{
+          tabBarBadge: cartItems?.length > 0 ? cartItems.length : null,
+        }}
       />
-      <Tab.Screen name="WishList" component={WishlistScreen} />
+      <Tab.Screen
+       name="WishList"
+        component={WishlistScreen} 
+        options={({navigation})=> ({
+          headerShown:true,
+          title:'My Wishlist',
+          tabBarBadge:wishlistCount > 0? wishlistCount : null,
+          headerRight: () => 
+            wishlistCount > 0 ? (
+              <TouchableOpacity onPress={clearAll} style={{marginRight:16}}>
+                <Text>Clear List</Text>
+              </TouchableOpacity>
+            ) : null,
+        })}
+        />
     </Tab.Navigator>
   );
 };
