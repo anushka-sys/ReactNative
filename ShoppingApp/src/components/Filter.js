@@ -9,8 +9,7 @@ import {ThemeContext} from '../context/ThemeContext';
 const Filter = ({ onSelectCategory, onSelectSort, resetKey }) => {
   const [visible, setVisible] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
-
-     const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   
      const styles = getStyles(theme);
 
