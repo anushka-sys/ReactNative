@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
 const CustomDrawer = props => {
-  const navigation = useNavigation();
+  //const navigation = props;
   const { isDark, toggleTheme ,theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -71,7 +71,9 @@ const CustomDrawer = props => {
               )}
               label="Help Center"
               labelStyle={{color:theme.textSecondary}}
-              onPress={() => navigation.navigate('Help')}
+              onPress={() => props.navigation.navigate('Help')
+              
+            }
             />
           </View>
         </View>
