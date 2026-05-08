@@ -1,294 +1,260 @@
+import React, { useState } from 'react';
 import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const flows = {
+  start: {
+    bot: 'How can I help you today?',
+    options: ['Order issue', 'Payment / Refund'],
+  },
+  order: {
+    bot: "What's the issue with your order?",
+    options: ['Track my order', 'Cancel my order'],
+  },
+  payment: {
+    bot: "What's your payment concern?",
+    options: ['Payment failed', 'Refund status'],
+  },
+  track: {
+    bot: 'Your order is on the way — arrives in 2-3 business days.',
+    options: ['Another issue', 'Talk to agent'],
+  },
+  cancel: {
+    bot: 'You can cancel before the order ships from the warehouse.',
+    options: ['Another issue', 'Talk to agent'],
+  },
+  failed: {
+    bot: "Your payment didn't go through. Please try another method.",
+    options: ['Another issue', 'Talk to agent'],
+  },
+  refund: {
+    bot: 'Refunds take 5-7 working days to appear in your account.',
+    options: ['Another issue', 'Talk to agent'],
+  },
+  another: {
+    bot: 'Sure! What else can I help you with?',
+    options: ['Order issue', 'Payment / Refund'],
+  },
+  agent: {
+    bot: 'Connecting you to a support agent. Please wait.',
+    options: ['Order issue', 'Payment / Refund'],
+  },
+};
+
+const optionMap = {
+  'Order issue': 'order',
+  'Payment / Refund': 'payment',
+  'Track my order': 'track',
+  'Cancel my order': 'cancel',
+  'Payment failed': 'failed',
+  'Refund status': 'refund',
+  'Another issue': 'another',
+  'Talk to agent': 'agent',
+};
+
+let idCounter = 10;
 
 const Help = () => {
-
-  const [message, setMessage] = useState('');
-
-  const [faqData, setFaqData] = useState([]);
-
-  const [chatData, setChatData] = useState([
+  const [text, setText] = useState('');
+  const [messages, setMessages] = useState([
     {
       id: '1',
-      type: 'bot',
-      text: 'Hello  How can I help you?',
+      sender: 'bot',
+      text: 'Hello! Welcome to Help Center.',
+      options: null,
+    },
+    {
+      id: '2',
+      sender: 'bot',
+      text: flows.start.bot,
+      options: flows.start.options,
     },
   ]);
 
-  useEffect(() => {
-    getFAQData();
-  }, []);
-
-  // API Fetch
-  const getFAQData = async () => {
-
-    try {
-
-      const response = await fetch(
-        'https://69a7bb832cd1d055269167fa.mockapi.io/api/v1/users'
-      );
-
-      const data = await response.json();
-
-      setFaqData(data);
-
-    } catch (error) {
-      console.log(error);
-    }
+  const addMessage = (sender, msgText, options = null) => {
+    const newMsg = {
+      id: String(idCounter++),
+      sender,
+      text: msgText,
+      options,
+    };
+    setMessages(prev => [...prev, newMsg]);
   };
 
-  // FAQ Click
-  const handleFAQPress = item => {
+  const selectOption = label => {
+    const key = optionMap[label];
+    const next = flows[key];
 
-    const userMsg = {
-      id: Date.now().toString(),
-      type: 'user',
-      text: item.question,
-    };
-
-    const botMsg = {
-      id: (Date.now() + 1).toString(),
-      type: 'bot',
-      text: item.answer,
-    };
-
-    setChatData(prev => [...prev, userMsg]);
+    addMessage('user', label);
 
     setTimeout(() => {
-      setChatData(prev => [...prev, botMsg]);
-    }, 500);
+      addMessage('bot', next.bot, next.options);
+    }, 400);
   };
 
-  // Send Message
   const sendMessage = () => {
+    if (text.trim() === '') return;
 
-    if (!message.trim()) {
-      return;
-    }
+    const lower = text.toLowerCase();
+    let reply =
+      "Sorry, I couldn't understand that. Please choose an option below.";
 
-    const userMsg = {
-      id: Date.now().toString(),
-      type: 'user',
-      text: message,
-    };
+    if (lower.includes('order') || lower.includes('track'))
+      reply = flows.track.bot;
+    else if (lower.includes('cancel')) reply = flows.cancel.bot;
+    else if (lower.includes('payment') || lower.includes('failed'))
+      reply = flows.failed.bot;
+    else if (lower.includes('refund')) reply = flows.refund.bot;
 
-    setChatData(prev => [...prev, userMsg]);
-
-    let botReply =
-      'Sorry  Please try another question.';
-
-    faqData.forEach(item => {
-
-      if (
-        message
-          .toLowerCase()
-          .includes(item.keyword.toLowerCase())
-      ) {
-        botReply = item.answer;
-      }
-    });
-
-    const botMsg = {
-      id: (Date.now() + 1).toString(),
-      type: 'bot',
-      text: botReply,
-    };
+    addMessage('user', text);
+    setText('');
 
     setTimeout(() => {
-      setChatData(prev => [...prev, botMsg]);
-    }, 500);
-
-    setMessage('');
+      addMessage('bot', reply, flows.start.options);
+    }, 400);
   };
 
-  const renderItem = ({item}) => {
-
+  const renderItem = ({ item }) => {
+    const isUser = item.sender === 'user';
     return (
-      <View
-        style={[
-          styles.chatBox,
-          item.type === 'user'
-            ? styles.userBox
-            : styles.botBox,
-        ]}>
+      <View>
+        <View
+          style={[styles.bubble, isUser ? styles.userBubble : styles.botBubble]}
+        >
+          <Text style={{ color: isUser ? '#fff' : '#000', fontSize: 15 }}>
+            {item.text}
+          </Text>
+        </View>
 
-        <Text
-          style={{
-            color:
-              item.type === 'user'
-                ? '#fff'
-                : '#000',
-          }}>
-          {item.text}
-        </Text>
-
+        {item.options && (
+          <View style={styles.optionsWrap}>
+            {item.options.map(opt => (
+              <TouchableOpacity
+                key={`${item.id}-${opt}`}
+                style={styles.optBtn}
+                onPress={() => selectOption(opt)}
+              >
+                <Text style={styles.optText}>{opt}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <Text style={styles.header}>Help Center</Text>
 
-      {/* Header */}
-      <Text style={styles.header}>
-        Help Center
-      </Text>
-
-      {/* FAQ */}
-      <FlatList
-        horizontal
-        data={faqData}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 10,
-        }}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-
-          <TouchableOpacity
-            style={styles.faqBtn}
-            onPress={() =>
-              handleFAQPress(item)
-            }>
-
-            <Text
-              numberOfLines={2}
-              style={styles.faqText}>
-              {item.question}
-            </Text>
-
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* Chat */}
-      <FlatList
-        data={chatData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={{
-          paddingBottom: 100,
-          paddingTop: 15,
-        }}
-      />
-
-      {/* Input */}
-      <View style={styles.inputContainer}>
-
-        <TextInput
-          placeholder="Ask something..."
-          value={message}
-          onChangeText={setMessage}
-          style={styles.input}
+        <FlatList
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.chatContainer}
         />
 
-        <TouchableOpacity
-          style={styles.sendBtn}
-          onPress={sendMessage}>
-
-          <Icon
-            name="send"
-            size={22}
-            color="#fff"
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask something..."
+            value={text}
+            onChangeText={setText}
           />
-
-        </TouchableOpacity>
-
-      </View>
-
-    </View>
+          <TouchableOpacity style={styles.sendBtn} onPress={sendMessage}>
+            <Icon name="send" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 export default Help;
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-
   header: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#F83758',
+    color: '#486ef9',
     textAlign: 'center',
-    marginVertical: 15,
+    marginVertical: 10,
   },
-
-  faqBtn: {
-    backgroundColor: '#F83758',
-    width: 170,
-    height:50,
-    padding: 12,
-    borderRadius: 15,
-    marginRight: 10,
-    justifyContent: 'center',
+  chatContainer: {
+    paddingHorizontal: 12,
+    paddingTop: 10,
   },
-
-  faqText: {
-    color: '#fff',
-    fontSize: 12,
-  },
-
-  chatBox: {
-    padding: 14,
-    marginHorizontal: 15,
-    marginBottom: 8,
-    borderRadius: 14,
+  bubble: {
     maxWidth: '75%',
+    padding: 12,
+    borderRadius: 16,
+    marginBottom: 6,
   },
-
-  userBox: {
-    backgroundColor: '#F83758',
+  userBubble: {
+    backgroundColor: '#486ef9',
     alignSelf: 'flex-end',
   },
-
-  botBox: {
+  botBubble: {
     backgroundColor: '#F1F1F1',
     alignSelf: 'flex-start',
   },
-
-  inputContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  optionsWrap: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+    gap: 6,
+  },
+  optBtn: {
+    borderWidth: 1,
+    borderColor: '#486ef9',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  optText: {
+    color: '#486ef9',
+    fontSize: 13,
+  },
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#ECECEC',
   },
-
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#DADADA',
+    borderColor: '#DDD',
     borderRadius: 25,
     paddingHorizontal: 15,
-    height: 48,
+    height: 46,
+    fontSize: 15,
   },
-
   sendBtn: {
-    backgroundColor: '#F83758',
-    height: 48,
-    width: 48,
-    borderRadius: 24,
+    backgroundColor: '#486ef9',
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
   },
-
 });
