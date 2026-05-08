@@ -46,7 +46,7 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: '#000000',
         tabBarStyle: {
           paddingBottom: 8,
-          height: 60,
+          height: 70,
           //paddingTop:5,
           backgroundColor: theme.backgroundPrimary,
         },
