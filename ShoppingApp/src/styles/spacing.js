@@ -35,7 +35,7 @@ export const spacing = {
   authTitleTop:       63,  
   paymentPadding:     16, 
   couponPaddingLeft:  20,  
-  couponGap:          15,  
+  couponGap:          20,  
   qtyBtnPaddingH:      8,  
   qtyBtnPaddingV:      2,  
   tabBarPaddingBottom: 5,  
