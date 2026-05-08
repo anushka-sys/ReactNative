@@ -177,4 +177,8 @@ const getStyles = theme =>
       color: '#A4A9B3',
       marginLeft: 4,
     },
+    heartButton:{
+     // paddingTop:10,
+     // paddingLeft:10,
+    }
   });
