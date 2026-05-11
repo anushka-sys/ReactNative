@@ -97,6 +97,7 @@ const getStyles = (theme) => StyleSheet.create({
   filterButtons: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap:8,
   },
   chipText: {
     fontSize: 12,
@@ -114,20 +115,20 @@ const getStyles = (theme) => StyleSheet.create({
     backgroundColor: theme.backgroundMuted,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    //gap: 4,
   },
   filterChip: {
     height: 24,
     paddingVertical: 4,
     paddingLeft: 12,
-    paddingRight: 18,
+    paddingRight: 10,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#E5E7EB',
     backgroundColor: theme.backgroundMuted,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+   // gap: 4,
   },
   filter:{
     color:theme.textPrimary,

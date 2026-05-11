@@ -7,14 +7,6 @@ const lightTheme = {
   backgroundMuted: '#f5f5f5',
   textPrimary: '#000000',
   textSecondary:'#787878',
-
-   primary: '#F83758',
-  
-  iconActive: '#F83758',
-  iconInactive: '#222222',
-
-  border: '#E5E5E5',
-
   inputBackground: '#FFFFFF',
   inputBorder: '#C8C8C8',
 };
@@ -24,11 +16,6 @@ const darkTheme = {
   backgroundMuted: '#1e1e1e',
   textPrimary: '#ffffff',
   textSecondary:'#cecece',
-
-  primary: '#F83758',
-
-  iconActive: '#F83758',
-  iconInactive: '#9A9A9A',
 
   inputBackground: '#1E1E1E',
   inputBorder: '#333333',

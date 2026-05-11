@@ -85,7 +85,7 @@ const Help = () => {
     const newMsg = {
       id: String(idCounter++),
       sender,
-      text: msgText,
+      text: msgText,  
       options,
     };
     setMessages(prev => [...prev, newMsg]);
